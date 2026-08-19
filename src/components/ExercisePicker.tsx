@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Exercise, MuscleId } from '../types'
-import { MUSCLE_IDS, MUSCLE_LABELS, primaryMuscle } from '../lib/muscles'
+import { BROAD_GROUPS, broadGroupForMuscle, primaryMuscle } from '../lib/muscles'
+import type { BroadGroupId } from '../lib/muscles'
 import AddExerciseForm from './AddExerciseForm'
 import './ExercisePicker.css'
 
@@ -20,7 +21,7 @@ export default function ExercisePicker({
   onCreateExercise,
 }: Props) {
   const [query, setQuery] = useState('')
-  const [browseMuscle, setBrowseMuscle] = useState<MuscleId | null>(null)
+  const [browseGroup, setBrowseGroup] = useState<BroadGroupId | null>(null)
   const [adding, setAdding] = useState(false)
 
   const selected = exercises.find((e) => e.id === selectedId)
@@ -34,7 +35,7 @@ export default function ExercisePicker({
           className="exercise-picker__change"
           onClick={() => {
             setQuery('')
-            setBrowseMuscle(null)
+            setBrowseGroup(null)
             setAdding(false)
             onDeselect()
           }}
@@ -52,9 +53,14 @@ export default function ExercisePicker({
         )
       : []
 
-  const groupMatches = browseMuscle
+  const group = BROAD_GROUPS.find((g) => g.id === browseGroup)
+
+  const groupMatches = group
     ? exercises
-        .filter((e) => primaryMuscle(e) === browseMuscle)
+        .filter((e) => {
+          const pm = primaryMuscle(e)
+          return pm && broadGroupForMuscle(pm).id === group.id
+        })
         .sort((a, b) => a.name.localeCompare(b.name))
     : []
 
@@ -66,7 +72,7 @@ export default function ExercisePicker({
         value={query}
         onChange={(e) => {
           setQuery(e.target.value)
-          setBrowseMuscle(null)
+          setBrowseGroup(null)
         }}
       />
 
@@ -88,29 +94,29 @@ export default function ExercisePicker({
         </div>
       )}
 
-      {query.trim().length === 0 && browseMuscle === null && (
+      {query.trim().length === 0 && !group && (
         <div className="exercise-picker__muscles">
-          {MUSCLE_IDS.map((m) => (
+          {BROAD_GROUPS.map((g) => (
             <button
-              key={m}
+              key={g.id}
               type="button"
               className="exercise-picker__muscle"
-              onClick={() => setBrowseMuscle(m)}
+              onClick={() => setBrowseGroup(g.id)}
             >
-              {MUSCLE_LABELS[m]}
+              {g.label}
             </button>
           ))}
         </div>
       )}
 
-      {query.trim().length === 0 && browseMuscle !== null && !adding && (
+      {query.trim().length === 0 && group && !adding && (
         <div className="exercise-picker__group">
           <button
             type="button"
             className="exercise-picker__back"
-            onClick={() => setBrowseMuscle(null)}
+            onClick={() => setBrowseGroup(null)}
           >
-            ← All muscles
+            ← All groups
           </button>
           <div className="exercise-picker__list exercise-picker__list--static">
             {groupMatches.map((e) => (
@@ -124,9 +130,7 @@ export default function ExercisePicker({
               </button>
             ))}
             {groupMatches.length === 0 && (
-              <p className="exercise-picker__empty">
-                No {MUSCLE_LABELS[browseMuscle]} exercises yet
-              </p>
+              <p className="exercise-picker__empty">No {group.label} exercises yet</p>
             )}
           </div>
           <button
@@ -134,18 +138,19 @@ export default function ExercisePicker({
             className="exercise-picker__add"
             onClick={() => setAdding(true)}
           >
-            + Add {MUSCLE_LABELS[browseMuscle]} exercise
+            + Add {group.label} exercise
           </button>
         </div>
       )}
 
-      {adding && browseMuscle !== null && (
+      {adding && group && (
         <AddExerciseForm
-          muscleLabel={MUSCLE_LABELS[browseMuscle]}
-          onSubmit={(name, bodyweight) => {
-            onCreateExercise(name, browseMuscle, bodyweight)
+          groupLabel={group.label}
+          muscleOptions={group.muscles}
+          onSubmit={(name, muscle, bodyweight) => {
+            onCreateExercise(name, muscle, bodyweight)
             setAdding(false)
-            setBrowseMuscle(null)
+            setBrowseGroup(null)
           }}
           onCancel={() => setAdding(false)}
         />

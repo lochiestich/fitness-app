@@ -27,23 +27,6 @@
   color: var(--color-text-muted);
 }
 
-.quick-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-}
-
-.quick-actions__button {
-  min-height: 56px;
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-size: var(--font-size-large);
-}
-
 .least-loaded {
   margin-top: var(--space-3);
   color: var(--color-text-muted);

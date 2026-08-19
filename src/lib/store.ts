@@ -46,6 +46,15 @@ export function deleteSession(id: string): DB {
   return db
 }
 
+export function upsertSession(session: Session): DB {
+  const db = loadDB()
+  const index = db.sessions.findIndex((s) => s.id === session.id)
+  if (index === -1) db.sessions.push(session)
+  else db.sessions[index] = session
+  saveDB(db)
+  return db
+}
+
 export function allExercises(db: DB): Exercise[] {
   return [...(exercisesSeed as Exercise[]), ...db.customExercises]
 }
@@ -75,9 +84,18 @@ export function sessionsMostRecentFirst(db: DB): Session[] {
     .sort((a, b) => (a.date === b.date ? 0 : a.date > b.date ? -1 : 1))
 }
 
-export function lastLiftSession(db: DB): LiftSession | undefined {
+export function lastLiftSession(
+  db: DB,
+  excludeId?: string,
+): LiftSession | undefined {
   return sessionsMostRecentFirst(db).find(
-    (s): s is LiftSession => s.type === 'lift',
+    (s): s is LiftSession => s.type === 'lift' && s.id !== excludeId,
+  )
+}
+
+export function todaysLiftSession(db: DB, today: string): LiftSession | undefined {
+  return db.sessions.find(
+    (s): s is LiftSession => s.type === 'lift' && s.date === today,
   )
 }
 

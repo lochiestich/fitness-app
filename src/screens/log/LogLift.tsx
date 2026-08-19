@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import {
   addCustomExercise,
-  addSession,
   allExercises,
+  deleteSession,
   lastLiftSession,
   lastSetForExercise,
   loadDB,
   newId,
   todayLocalDate,
+  todaysLiftSession,
+  upsertSession,
 } from '../../lib/store'
 import { categoryForMuscle } from '../../lib/muscles'
 import type { Exercise, LiftSet, MuscleId } from '../../types'
@@ -16,12 +18,29 @@ import './LogForm.css'
 
 export default function LogLift() {
   const [exercises, setExercises] = useState(() => allExercises(loadDB()))
+  const today = todayLocalDate()
+  const [sessionId] = useState(() => todaysLiftSession(loadDB(), today)?.id ?? newId())
+  const [sets, setSets] = useState<LiftSet[]>(
+    () => todaysLiftSession(loadDB(), today)?.sets ?? [],
+  )
+  const [notes, setNotes] = useState(() => todaysLiftSession(loadDB(), today)?.notes ?? '')
   const [exerciseId, setExerciseId] = useState<string | null>(null)
   const [weightKg, setWeightKg] = useState<number | ''>('')
   const [reps, setReps] = useState<number | ''>('')
-  const [sets, setSets] = useState<LiftSet[]>([])
-  const [notes, setNotes] = useState('')
-  const [saved, setSaved] = useState(false)
+
+  const persist = (nextSets: LiftSet[], nextNotes: string) => {
+    if (nextSets.length === 0) {
+      deleteSession(sessionId)
+      return
+    }
+    upsertSession({
+      id: sessionId,
+      date: today,
+      type: 'lift',
+      sets: nextSets,
+      ...(nextNotes.trim() ? { notes: nextNotes.trim() } : {}),
+    })
+  }
 
   const selectExercise = (id: string) => {
     setExerciseId(id)
@@ -49,41 +68,34 @@ export default function LogLift() {
 
   const addSet = () => {
     if (!exerciseId || reps === '' || reps <= 0) return
-    setSets([...sets, { exerciseId, weightKg: weightKg === '' ? 0 : weightKg, reps }])
+    const next = [...sets, { exerciseId, weightKg: weightKg === '' ? 0 : weightKg, reps }]
+    setSets(next)
+    persist(next, notes)
   }
 
   const duplicateLastSet = () => {
     if (sets.length === 0) return
-    setSets([...sets, { ...sets[sets.length - 1] }])
+    const next = [...sets, { ...sets[sets.length - 1] }]
+    setSets(next)
+    persist(next, notes)
   }
 
   const removeSet = (index: number) => {
-    setSets(sets.filter((_, i) => i !== index))
+    const next = sets.filter((_, i) => i !== index)
+    setSets(next)
+    persist(next, notes)
   }
 
   const repeatLastSession = () => {
-    const last = lastLiftSession(loadDB())
-    if (last) setSets(last.sets.map((s) => ({ ...s })))
+    const last = lastLiftSession(loadDB(), sessionId)
+    if (!last) return
+    const next = last.sets.map((s) => ({ ...s }))
+    setSets(next)
+    persist(next, notes)
   }
 
   const exerciseName = (id: string) =>
     exercises.find((e) => e.id === id)?.name ?? id
-
-  const save = () => {
-    if (sets.length === 0) return
-    addSession({
-      id: newId(),
-      date: todayLocalDate(),
-      type: 'lift',
-      sets,
-      ...(notes.trim() ? { notes: notes.trim() } : {}),
-    })
-    setSets([])
-    setExerciseId(null)
-    setNotes('')
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
-  }
 
   return (
     <div className="log-form">
@@ -163,19 +175,14 @@ export default function LogLift() {
 
       <div className="log-form__field">
         <label>Notes</label>
-        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          onBlur={() => persist(sets, notes)}
+        />
       </div>
 
-      <button
-        type="button"
-        className="log-form__button log-form__button--primary"
-        onClick={save}
-        disabled={sets.length === 0}
-      >
-        Save session
-      </button>
-
-      {saved && <p className="log-form__status">Saved</p>}
+      {sets.length > 0 && <p className="log-form__status">Saved automatically</p>}
     </div>
   )
 }

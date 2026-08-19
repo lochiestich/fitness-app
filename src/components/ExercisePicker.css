@@ -129,6 +129,27 @@
   font-size: var(--font-size-body);
 }
 
+.exercise-picker__muscle-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.exercise-picker__muscle-option {
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.exercise-picker__muscle-option--active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
 .exercise-picker__checkbox {
   display: flex;
   align-items: center;

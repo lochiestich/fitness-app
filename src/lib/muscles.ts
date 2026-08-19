@@ -58,6 +58,21 @@ export function categoryForMuscle(muscle: MuscleId): ExerciseCategory {
   return MUSCLE_TO_CATEGORY[muscle]
 }
 
+export type BroadGroupId = 'chest' | 'shoulders' | 'back' | 'arms' | 'core' | 'legs'
+
+export const BROAD_GROUPS: { id: BroadGroupId; label: string; muscles: MuscleId[] }[] = [
+  { id: 'chest', label: 'Chest', muscles: ['chest'] },
+  { id: 'shoulders', label: 'Shoulders', muscles: ['front_delts', 'side_delts', 'rear_delts'] },
+  { id: 'back', label: 'Back', muscles: ['lats', 'upper_back', 'lower_back'] },
+  { id: 'arms', label: 'Arms', muscles: ['biceps', 'triceps', 'forearms'] },
+  { id: 'legs', label: 'Legs', muscles: ['glutes', 'quads', 'hamstrings', 'calves'] },
+  { id: 'core', label: 'Core', muscles: ['core'] },
+]
+
+export function broadGroupForMuscle(muscle: MuscleId) {
+  return BROAD_GROUPS.find((g) => g.muscles.includes(muscle))!
+}
+
 export function primaryMuscle(exercise: Exercise): MuscleId | undefined {
   let best: MuscleId | undefined
   let bestValue = -Infinity

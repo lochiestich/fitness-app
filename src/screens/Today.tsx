@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { allExercises, loadDB, todayLocalDate } from '../lib/store'
-import QuickActions from './today/QuickActions'
 import WeekSummary from './today/WeekSummary'
 import LeastLoaded from './today/LeastLoaded'
 import RecentSessions from './today/RecentSessions'
@@ -14,7 +13,6 @@ export default function Today() {
     <section>
       <h1>Today</h1>
       <WeekSummary sessions={db.sessions} />
-      <QuickActions />
       <LeastLoaded
         sessions={db.sessions}
         exercises={exercises}
