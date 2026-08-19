@@ -69,7 +69,7 @@ export function newId(): string {
   return crypto.randomUUID()
 }
 
-function sessionsMostRecentFirst(db: DB): Session[] {
+export function sessionsMostRecentFirst(db: DB): Session[] {
   return [...db.sessions]
     .reverse()
     .sort((a, b) => (a.date === b.date ? 0 : a.date > b.date ? -1 : 1))

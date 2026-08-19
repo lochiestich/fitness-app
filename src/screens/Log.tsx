@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import SegmentedControl from '../components/SegmentedControl'
 import LogLift from './log/LogLift'
 import LogCardio from './log/LogCardio'
 import LogPolo from './log/LogPolo'
 
-type LogType = 'lift' | 'cardio' | 'polo'
+export type LogType = 'lift' | 'cardio' | 'polo'
 
 export default function Log() {
-  const [type, setType] = useState<LogType>('lift')
+  const location = useLocation()
+  const initial = (location.state as { type?: LogType } | null)?.type ?? 'lift'
+  const [type, setType] = useState<LogType>(initial)
 
   return (
     <section>
