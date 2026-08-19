@@ -1,0 +1,59 @@
+.muscle-detail {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.muscle-detail h2 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-large);
+}
+
+.muscle-detail__since {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.muscle-detail__volumes {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.muscle-detail__volume {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: var(--color-surface-raised);
+  border-radius: var(--radius);
+}
+
+.muscle-detail__value {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-large);
+  font-variant-numeric: tabular-nums;
+}
+
+.muscle-detail__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.muscle-detail__contributors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.muscle-detail__contributor {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}

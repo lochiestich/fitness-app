@@ -1,0 +1,42 @@
+.body-map {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+.body-map__figure-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: 45%;
+}
+
+.body-map__figure {
+  width: 100%;
+  height: auto;
+}
+
+.body-map__head {
+  fill: var(--color-border);
+}
+
+.body-map__region {
+  cursor: pointer;
+}
+
+.body-map__region rect:not([fill='transparent']) {
+  stroke: var(--color-bg);
+  stroke-width: 1;
+}
+
+.body-map__region--selected rect:not([fill='transparent']) {
+  stroke: var(--color-text);
+  stroke-width: 2;
+}
+
+.body-map__caption {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}

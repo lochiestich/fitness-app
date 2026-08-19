@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
+  contributingExercises,
   daysAgo,
+  daysSinceLastWorked,
+  decayedMuscleVolume,
   leastLoadedMuscles,
   loadForSet,
+  muscleFatigue,
   muscleVolumeForSession,
   muscleVolumeInWindow,
   sessionLoad,
@@ -203,5 +207,143 @@ describe('startOfWeek', () => {
       expect(start <= date).toBe(true)
       expect(daysAgo(start, date)).toBeLessThanOrEqual(6)
     }
+  })
+})
+
+describe('decayedMuscleVolume', () => {
+  it('applies no decay to a session logged today', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
+    expect(decayed.chest).toBeCloseTo(480)
+  })
+
+  it('applies exponential decay based on days ago (half-life 2.5 days)', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-14', // 5 days before reference
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
+    // 480 * e^(-5/2.5) = 480 * e^-2
+    expect(decayed.chest).toBeCloseTo(480 * Math.exp(-2))
+  })
+
+  it('ignores sessions outside the 10-day lookback', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-01', // well over 10 days ago
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
+    expect(decayed.chest).toBe(0)
+  })
+})
+
+describe('muscleFatigue', () => {
+  it('is 0 for every muscle when there are no sessions', () => {
+    const fatigue = muscleFatigue([], exercises, 75, '2026-08-19')
+    expect(fatigue.chest).toBe(0)
+  })
+
+  it('is 1 for a muscle whose only session is today (today is necessarily its own peak)', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const fatigue = muscleFatigue([session], exercises, 75, '2026-08-19')
+    expect(fatigue.chest).toBeCloseTo(1)
+  })
+
+  it('reads lower for a muscle worked longer ago than one worked recently', () => {
+    const recent: LiftSession = {
+      id: '1',
+      date: '2026-08-18',
+      type: 'lift',
+      sets: [{ exerciseId: 'dips', weightKg: 0, reps: 10 }], // hits triceps
+    }
+    const stale: LiftSession = {
+      id: '2',
+      date: '2026-07-20', // outside the fatigue lookback, but still within the 8-week peak window
+      type: 'lift',
+      sets: [{ exerciseId: 'dips', weightKg: 0, reps: 10 }],
+    }
+    const fatigue = muscleFatigue([recent, stale], exercises, 75, '2026-08-19')
+    // recent was worked yesterday (still decaying); stale was worked weeks ago so its
+    // decayed contribution today is ~0, but it set the 8-week peak, so the ratio is < 1
+    expect(fatigue.triceps).toBeGreaterThan(0)
+    expect(fatigue.triceps).toBeLessThan(1)
+  })
+})
+
+describe('daysSinceLastWorked', () => {
+  it('is undefined when the muscle has never been worked', () => {
+    expect(daysSinceLastWorked([], exercises, 75, 'chest', '2026-08-19')).toBeUndefined()
+  })
+
+  it('is 0 for a muscle worked today', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    expect(daysSinceLastWorked([session], exercises, 75, 'chest', '2026-08-19')).toBe(0)
+  })
+
+  it('finds the most recent session that actually touches the muscle', () => {
+    const old: LiftSession = {
+      id: '1',
+      date: '2026-08-05',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }], // chest
+    }
+    const recentLegs: LiftSession = {
+      id: '2',
+      date: '2026-08-18',
+      type: 'lift',
+      sets: [{ exerciseId: 'dips', weightKg: 0, reps: 10 }], // triceps/chest, not legs
+    }
+    expect(
+      daysSinceLastWorked([old, recentLegs], exercises, 75, 'chest', '2026-08-19'),
+    ).toBe(1) // recentLegs (dips) also hits chest, 1 day ago
+  })
+})
+
+describe('contributingExercises', () => {
+  it('sums volume per exercise for the given muscle and sorts descending', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }, // chest volume 480
+        { exerciseId: 'dips', weightKg: 10, reps: 10 }, // chest volume 850*0.8=680
+      ],
+    }
+    const result = contributingExercises([session], exercises, 75, 'chest', 28, '2026-08-19')
+    expect(result).toEqual([
+      { exerciseId: 'dips', volume: 680 },
+      { exerciseId: 'barbell_bench_press', volume: 480 },
+    ])
+  })
+
+  it('excludes exercises that do not touch the muscle', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const result = contributingExercises([session], exercises, 75, 'quads', 28, '2026-08-19')
+    expect(result).toEqual([])
   })
 })

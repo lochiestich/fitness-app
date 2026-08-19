@@ -1,0 +1,22 @@
+.volume-bars {
+  margin-top: var(--space-4);
+}
+
+.volume-bars__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.volume-bars__header h2 {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  font-weight: normal;
+  margin: 0;
+}
+
+.volume-bars__header .segmented {
+  max-width: 160px;
+}
