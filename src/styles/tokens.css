@@ -16,6 +16,11 @@
   --color-fatigue-mid: #d8b04a;
   --color-fatigue-hot: #d1503f;
 
+  /* Session type, categorical */
+  --color-type-lift: #6ed2b4;
+  --color-type-cardio: #6f9bd8;
+  --color-type-polo: #d8a24a;
+
   /* Type */
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,

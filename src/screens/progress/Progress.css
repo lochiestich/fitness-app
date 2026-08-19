@@ -1,0 +1,129 @@
+.progress-block {
+  margin-top: var(--space-4);
+}
+
+.progress-block h2 {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+  font-weight: normal;
+  margin: 0 0 var(--space-2);
+}
+
+.progress-select {
+  width: 100%;
+  min-height: var(--touch-target-min);
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+}
+
+.progress-subheading {
+  margin: var(--space-2) 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.progress-best-set {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+/* Consistency grid */
+.consistency-grid {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+}
+
+.consistency-grid__column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.consistency-grid__cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.consistency-grid__cell--lift {
+  background: var(--color-type-lift);
+  border-color: var(--color-type-lift);
+}
+
+.consistency-grid__cell--cardio {
+  background: var(--color-type-cardio);
+  border-color: var(--color-type-cardio);
+}
+
+.consistency-grid__cell--polo {
+  background: var(--color-type-polo);
+  border-color: var(--color-type-polo);
+}
+
+.consistency-grid__cell--mixed {
+  background: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.consistency-grid__count {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+}
+
+/* Polo horse tally */
+.polo-horse-tally {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.polo-horse-tally__row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Personal records */
+.personal-records {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.personal-records__row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.personal-records__value {
+  font-weight: 600;
+}
+
+.personal-records__date {
+  color: var(--color-text-muted);
+}
