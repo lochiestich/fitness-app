@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { allExercises, loadDB, todayLocalDate } from '../lib/store'
-import WeekSummary from './today/WeekSummary'
+import StreakBar from './today/StreakBar'
+import GoalsWidget from './today/GoalsWidget'
 import LeastLoaded from './today/LeastLoaded'
 import RecentSessions from './today/RecentSessions'
 import './today/Today.css'
@@ -12,7 +13,8 @@ export default function Today() {
   return (
     <section>
       <h1>Today</h1>
-      <WeekSummary sessions={db.sessions} />
+      <StreakBar sessions={db.sessions} />
+      <GoalsWidget sessions={db.sessions} />
       <LeastLoaded
         sessions={db.sessions}
         exercises={exercises}

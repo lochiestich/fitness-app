@@ -1,29 +1,78 @@
-.week-summary {
+.streak-bar {
   display: flex;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
+  justify-content: space-between;
+  margin-top: var(--space-2);
 }
 
-.week-summary__stat {
-  flex: 1;
+.streak-bar__day {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
-  padding: var(--space-3) var(--space-2);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
 }
 
-.week-summary__value {
+.streak-bar__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.streak-bar__pip {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.streak-bar__pip--filled {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.streak-bar__pip--future {
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.streak-bar__pip--today {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.goals-widget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.polo-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.polo-badge--active {
+  border-color: var(--color-type-polo);
+  color: var(--color-text);
+}
+
+.polo-badge__value {
   font-family: var(--font-serif);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-large);
   font-variant-numeric: tabular-nums;
 }
 
-.week-summary__label {
-  font-size: var(--font-size-small);
+.polo-badge__label {
+  font-size: 10px;
   color: var(--color-text-muted);
 }
 

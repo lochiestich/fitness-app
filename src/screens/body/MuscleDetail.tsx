@@ -3,12 +3,12 @@ import {
   daysSinceLastWorked,
   muscleVolumeInWindow,
 } from '../../lib/metrics'
-import { MUSCLE_LABELS } from '../../lib/muscles'
 import type { Exercise, MuscleId, Session } from '../../types'
 import './MuscleDetail.css'
 
 type Props = {
-  muscle: MuscleId
+  label: string
+  muscles: MuscleId[]
   sessions: Session[]
   exercises: Exercise[]
   bodyweightKg: number
@@ -17,23 +17,47 @@ type Props = {
 
 const CONTRIBUTOR_WINDOW_DAYS = 28
 
+function mergeContributors(
+  lists: { exerciseId: string; volume: number }[][],
+): { exerciseId: string; volume: number }[] {
+  const totals = new Map<string, number>()
+  for (const list of lists) {
+    for (const c of list) totals.set(c.exerciseId, (totals.get(c.exerciseId) ?? 0) + c.volume)
+  }
+  return [...totals.entries()]
+    .map(([exerciseId, volume]) => ({ exerciseId, volume }))
+    .sort((a, b) => b.volume - a.volume)
+}
+
 export default function MuscleDetail({
-  muscle,
+  label,
+  muscles,
   sessions,
   exercises,
   bodyweightKg,
   referenceDate,
 }: Props) {
-  const days = daysSinceLastWorked(sessions, exercises, bodyweightKg, muscle, referenceDate)
-  const vol7 = muscleVolumeInWindow(sessions, exercises, bodyweightKg, 7, referenceDate)[muscle]
-  const vol28 = muscleVolumeInWindow(sessions, exercises, bodyweightKg, 28, referenceDate)[muscle]
-  const contributors = contributingExercises(
-    sessions,
-    exercises,
-    bodyweightKg,
-    muscle,
-    CONTRIBUTOR_WINDOW_DAYS,
-    referenceDate,
+  const daysList = muscles
+    .map((m) => daysSinceLastWorked(sessions, exercises, bodyweightKg, m, referenceDate))
+    .filter((d): d is number => d !== undefined)
+  const days = daysList.length > 0 ? Math.min(...daysList) : undefined
+
+  const vol7Map = muscleVolumeInWindow(sessions, exercises, bodyweightKg, 7, referenceDate)
+  const vol28Map = muscleVolumeInWindow(sessions, exercises, bodyweightKg, 28, referenceDate)
+  const vol7 = muscles.reduce((sum, m) => sum + vol7Map[m], 0)
+  const vol28 = muscles.reduce((sum, m) => sum + vol28Map[m], 0)
+
+  const contributors = mergeContributors(
+    muscles.map((m) =>
+      contributingExercises(
+        sessions,
+        exercises,
+        bodyweightKg,
+        m,
+        CONTRIBUTOR_WINDOW_DAYS,
+        referenceDate,
+      ),
+    ),
   )
 
   const sinceLabel =
@@ -45,7 +69,7 @@ export default function MuscleDetail({
 
   return (
     <div className="muscle-detail">
-      <h2>{MUSCLE_LABELS[muscle]}</h2>
+      <h2>{label}</h2>
       <p className="muscle-detail__since">{sinceLabel}</p>
       <div className="muscle-detail__volumes">
         <div className="muscle-detail__volume">

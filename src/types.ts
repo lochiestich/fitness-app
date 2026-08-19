@@ -30,6 +30,8 @@ export type LiftSet = {
   weightKg: number
   reps: number
   rpe?: number
+  supersetId?: string
+  round?: number
 }
 
 export type CardioActivity = 'run' | 'swim' | 'cycle' | 'row' | 'walk' | 'other'

@@ -2,88 +2,134 @@ import type { MuscleId } from '../types'
 
 export type RegionShape = { x: number; y: number; w: number; h: number; rx: number }
 
-export type BodyRegion = { muscle: MuscleId; shapes: RegionShape[] }
+export type BodyRegion = {
+  id: string
+  label: string
+  muscles: MuscleId[]
+  shapes: RegionShape[]
+}
 
 export const FRONT_VIEWBOX_HEIGHT = 160
-export const BACK_VIEWBOX_HEIGHT = 190
+export const BACK_VIEWBOX_HEIGHT = 210
+
+// Regions are laid out so that any two whose x-ranges overlap keep at least a
+// 2-unit y gap between them (and vice versa) -- BodyMap pads each shape's hit
+// area by 1 unit for touch, so a 2-unit real gap keeps hit areas from ever
+// overlapping and stealing taps meant for a neighbour.
 
 export const FRONT_REGIONS: BodyRegion[] = [
   {
-    muscle: 'side_delts',
+    id: 'shoulders_front',
+    label: 'Shoulders',
+    muscles: ['front_delts', 'side_delts'],
     shapes: [
-      { x: 12, y: 28, w: 14, h: 8, rx: 4 },
-      { x: 74, y: 28, w: 14, h: 8, rx: 4 },
+      { x: 10, y: 28, w: 18, h: 18, rx: 8 },
+      { x: 72, y: 28, w: 18, h: 18, rx: 8 },
     ],
   },
   {
-    muscle: 'front_delts',
-    shapes: [
-      { x: 14, y: 36, w: 14, h: 10, rx: 3 },
-      { x: 72, y: 36, w: 14, h: 10, rx: 3 },
-    ],
-  },
-  { muscle: 'chest', shapes: [{ x: 32, y: 40, w: 36, h: 24, rx: 6 }] },
-  {
-    muscle: 'biceps',
-    shapes: [
-      { x: 6, y: 48, w: 12, h: 26, rx: 5 },
-      { x: 82, y: 48, w: 12, h: 26, rx: 5 },
-    ],
+    id: 'chest',
+    label: 'Chest',
+    muscles: ['chest'],
+    shapes: [{ x: 30, y: 38, w: 40, h: 26, rx: 9 }],
   },
   {
-    muscle: 'forearms',
+    id: 'biceps',
+    label: 'Biceps',
+    muscles: ['biceps'],
+    shapes: [
+      { x: 4, y: 48, w: 13, h: 26, rx: 6 },
+      { x: 83, y: 48, w: 13, h: 26, rx: 6 },
+    ],
+  },
+  {
+    id: 'forearms',
+    label: 'Forearms',
+    muscles: ['forearms'],
     shapes: [
       { x: 4, y: 76, w: 11, h: 28, rx: 5 },
       { x: 85, y: 76, w: 11, h: 28, rx: 5 },
     ],
   },
-  { muscle: 'core', shapes: [{ x: 36, y: 66, w: 28, h: 30, rx: 6 }] },
   {
-    muscle: 'quads',
+    id: 'core',
+    label: 'Core',
+    muscles: ['core'],
+    shapes: [{ x: 34, y: 66, w: 32, h: 30, rx: 9 }],
+  },
+  {
+    id: 'quads',
+    label: 'Quads',
+    muscles: ['quads'],
     shapes: [
-      { x: 30, y: 100, w: 17, h: 50, rx: 6 },
-      { x: 53, y: 100, w: 17, h: 50, rx: 6 },
+      { x: 29, y: 98, w: 18, h: 52, rx: 7 },
+      { x: 53, y: 98, w: 18, h: 52, rx: 7 },
     ],
   },
 ]
 
 export const BACK_REGIONS: BodyRegion[] = [
   {
-    muscle: 'rear_delts',
+    id: 'shoulders_back',
+    label: 'Rear Delts',
+    muscles: ['rear_delts'],
     shapes: [
-      { x: 12, y: 28, w: 14, h: 8, rx: 4 },
-      { x: 74, y: 28, w: 14, h: 8, rx: 4 },
-    ],
-  },
-  { muscle: 'upper_back', shapes: [{ x: 30, y: 36, w: 40, h: 20, rx: 6 }] },
-  {
-    muscle: 'triceps',
-    shapes: [
-      { x: 4, y: 48, w: 12, h: 26, rx: 5 },
-      { x: 84, y: 48, w: 12, h: 26, rx: 5 },
+      { x: 10, y: 28, w: 18, h: 18, rx: 8 },
+      { x: 72, y: 28, w: 18, h: 18, rx: 8 },
     ],
   },
   {
-    muscle: 'lats',
-    shapes: [
-      { x: 22, y: 54, w: 20, h: 24, rx: 6 },
-      { x: 58, y: 54, w: 20, h: 24, rx: 6 },
-    ],
-  },
-  { muscle: 'lower_back', shapes: [{ x: 36, y: 76, w: 28, h: 16, rx: 6 }] },
-  { muscle: 'glutes', shapes: [{ x: 32, y: 94, w: 36, h: 20, rx: 8 }] },
-  {
-    muscle: 'hamstrings',
-    shapes: [
-      { x: 30, y: 116, w: 17, h: 34, rx: 6 },
-      { x: 53, y: 116, w: 17, h: 34, rx: 6 },
-    ],
+    id: 'upper_back',
+    label: 'Upper Back',
+    muscles: ['upper_back'],
+    shapes: [{ x: 30, y: 38, w: 40, h: 22, rx: 9 }],
   },
   {
-    muscle: 'calves',
+    id: 'triceps',
+    label: 'Triceps',
+    muscles: ['triceps'],
     shapes: [
-      { x: 30, y: 152, w: 17, h: 30, rx: 6 },
-      { x: 53, y: 152, w: 17, h: 30, rx: 6 },
+      { x: 4, y: 48, w: 13, h: 26, rx: 6 },
+      { x: 83, y: 48, w: 13, h: 26, rx: 6 },
+    ],
+  },
+  {
+    id: 'lats',
+    label: 'Lats',
+    muscles: ['lats'],
+    shapes: [
+      { x: 20, y: 62, w: 22, h: 26, rx: 7 },
+      { x: 58, y: 62, w: 22, h: 26, rx: 7 },
+    ],
+  },
+  {
+    id: 'lower_back',
+    label: 'Lower Back',
+    muscles: ['lower_back'],
+    shapes: [{ x: 34, y: 90, w: 32, h: 18, rx: 8 }],
+  },
+  {
+    id: 'glutes',
+    label: 'Glutes',
+    muscles: ['glutes'],
+    shapes: [{ x: 30, y: 110, w: 40, h: 22, rx: 9 }],
+  },
+  {
+    id: 'hamstrings',
+    label: 'Hamstrings',
+    muscles: ['hamstrings'],
+    shapes: [
+      { x: 29, y: 134, w: 18, h: 36, rx: 7 },
+      { x: 53, y: 134, w: 18, h: 36, rx: 7 },
+    ],
+  },
+  {
+    id: 'calves',
+    label: 'Calves',
+    muscles: ['calves'],
+    shapes: [
+      { x: 29, y: 172, w: 18, h: 32, rx: 7 },
+      { x: 53, y: 172, w: 18, h: 32, rx: 7 },
     ],
   },
 ]

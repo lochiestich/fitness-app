@@ -53,6 +53,12 @@ export default function ExercisePicker({
         )
       : []
 
+  const handleSelect = (id: string) => {
+    setQuery('')
+    setBrowseGroup(null)
+    onSelect(id)
+  }
+
   const group = BROAD_GROUPS.find((g) => g.id === browseGroup)
 
   const groupMatches = group
@@ -83,7 +89,7 @@ export default function ExercisePicker({
               key={e.id}
               type="button"
               className="exercise-picker__item"
-              onClick={() => onSelect(e.id)}
+              onClick={() => handleSelect(e.id)}
             >
               {e.name}
             </button>

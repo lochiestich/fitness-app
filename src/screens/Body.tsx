@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { allExercises, loadDB, todayLocalDate } from '../lib/store'
 import { muscleFatigue } from '../lib/metrics'
-import type { MuscleId } from '../types'
+import type { BodyRegion } from '../lib/bodyRegions'
 import BodyMap from '../components/BodyMap'
 import MuscleDetail from './body/MuscleDetail'
 import VolumeBars from './body/VolumeBars'
@@ -12,12 +12,12 @@ export default function Body() {
   const exercises = allExercises(db)
   const today = todayLocalDate()
   const fatigue = muscleFatigue(db.sessions, exercises, db.settings.bodyweightKg, today)
-  const [selected, setSelected] = useState<MuscleId | null>(null)
+  const [selected, setSelected] = useState<BodyRegion | null>(null)
 
   return (
     <section>
       <h1>Body</h1>
-      <BodyMap fatigue={fatigue} selected={selected} onSelect={setSelected} />
+      <BodyMap fatigue={fatigue} selectedId={selected?.id ?? null} onSelect={setSelected} />
       <p className="body-legend">
         Cooler means trained longer ago, hotter means trained more recently — hot
         doesn't mean it needs work.
@@ -25,7 +25,8 @@ export default function Body() {
 
       {selected && (
         <MuscleDetail
-          muscle={selected}
+          label={selected.label}
+          muscles={selected.muscles}
           sessions={db.sessions}
           exercises={exercises}
           bodyweightKg={db.settings.bodyweightKg}
