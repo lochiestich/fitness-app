@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/training-log/',
+  base: '/fitness-app/',
   plugins: [
     react(),
     VitePWA({
