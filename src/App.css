@@ -1,0 +1,8 @@
+.app {
+  min-height: 100vh;
+}
+
+.app__content {
+  padding: var(--space-3);
+  padding-bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom) + var(--space-3));
+}
