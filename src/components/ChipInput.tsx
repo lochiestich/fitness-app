@@ -29,9 +29,9 @@ export default function ChipInput({
 
   const matches = suggestions.filter(
     (s) =>
-      text.trim().length > 0 &&
-      s.toLowerCase().includes(text.trim().toLowerCase()) &&
-      !values.includes(s),
+      !values.includes(s) &&
+      (text.trim().length === 0 ||
+        s.toLowerCase().includes(text.trim().toLowerCase())),
   )
 
   return (

@@ -1,5 +1,6 @@
 import type { DB, Exercise, LiftSession, LiftSet, Session } from '../types'
 import exercisesSeed from '../data/exercises.json'
+import horsesSeed from '../data/horses.json'
 
 const STORAGE_KEY = 'training-log:db'
 
@@ -94,7 +95,7 @@ export function lastSetForExercise(
 }
 
 export function knownHorses(db: DB): string[] {
-  const names = new Set<string>()
+  const names = new Set<string>(horsesSeed as string[])
   for (const session of db.sessions) {
     if (session.type === 'polo') session.horses.forEach((h) => names.add(h))
   }

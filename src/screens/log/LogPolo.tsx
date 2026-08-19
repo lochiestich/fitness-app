@@ -50,7 +50,7 @@ export default function LogPolo() {
           values={horses}
           onChange={setHorses}
           suggestions={suggestions}
-          placeholder="Add a horse"
+          placeholder="Tap a horse, or type a new one"
         />
       </div>
 
