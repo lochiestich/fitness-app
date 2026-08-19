@@ -3,13 +3,13 @@ import { addSession, newId, todayLocalDate } from '../../lib/store'
 import type { CardioActivity } from '../../types'
 import './LogForm.css'
 
-const ACTIVITIES: CardioActivity[] = [
-  'run',
-  'swim',
-  'cycle',
-  'row',
-  'walk',
-  'other',
+const ACTIVITIES: { value: CardioActivity; label: string }[] = [
+  { value: 'run', label: 'Run' },
+  { value: 'swim', label: 'Swim' },
+  { value: 'cycle', label: 'Cycle' },
+  { value: 'row', label: 'Row' },
+  { value: 'walk', label: 'Walk' },
+  { value: 'other', label: 'Other' },
 ]
 
 type DistanceUnit = 'km' | 'm' | 'mi'
@@ -22,7 +22,7 @@ function toKm(value: number, unit: DistanceUnit): number {
 
 export default function LogCardio() {
   const [activity, setActivity] = useState<CardioActivity>('run')
-  const [durationMin, setDurationMin] = useState(0)
+  const [durationMin, setDurationMin] = useState<number | ''>('')
   const [distanceValue, setDistanceValue] = useState<number | ''>('')
   const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>('km')
   const [rpe, setRpe] = useState<number | ''>('')
@@ -30,7 +30,7 @@ export default function LogCardio() {
   const [saved, setSaved] = useState(false)
 
   const save = () => {
-    if (durationMin <= 0) return
+    if (durationMin === '' || durationMin <= 0) return
     addSession({
       id: newId(),
       date: todayLocalDate(),
@@ -43,7 +43,7 @@ export default function LogCardio() {
       ...(rpe !== '' ? { rpe } : {}),
       ...(notes.trim() ? { notes: notes.trim() } : {}),
     })
-    setDurationMin(0)
+    setDurationMin('')
     setDistanceValue('')
     setRpe('')
     setNotes('')
@@ -60,8 +60,8 @@ export default function LogCardio() {
           onChange={(e) => setActivity(e.target.value as CardioActivity)}
         >
           {ACTIVITIES.map((a) => (
-            <option key={a} value={a}>
-              {a}
+            <option key={a.value} value={a.value}>
+              {a.label}
             </option>
           ))}
         </select>
@@ -73,7 +73,9 @@ export default function LogCardio() {
           type="number"
           inputMode="decimal"
           value={durationMin}
-          onChange={(e) => setDurationMin(Number(e.target.value))}
+          onChange={(e) =>
+            setDurationMin(e.target.value === '' ? '' : Number(e.target.value))
+          }
         />
       </div>
 
@@ -127,7 +129,7 @@ export default function LogCardio() {
         type="button"
         className="log-form__button log-form__button--primary"
         onClick={save}
-        disabled={durationMin <= 0}
+        disabled={durationMin === '' || durationMin <= 0}
       >
         Save session
       </button>

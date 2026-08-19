@@ -49,6 +49,13 @@ export function allExercises(db: DB): Exercise[] {
   return [...(exercisesSeed as Exercise[]), ...db.customExercises]
 }
 
+export function addCustomExercise(exercise: Exercise): DB {
+  const db = loadDB()
+  db.customExercises.push(exercise)
+  saveDB(db)
+  return db
+}
+
 export function todayLocalDate(): string {
   const d = new Date()
   const y = d.getFullYear()

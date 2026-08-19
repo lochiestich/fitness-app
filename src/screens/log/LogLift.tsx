@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  addCustomExercise,
   addSession,
   allExercises,
   lastLiftSession,
@@ -8,15 +9,16 @@ import {
   newId,
   todayLocalDate,
 } from '../../lib/store'
-import type { LiftSet } from '../../types'
+import { categoryForMuscle } from '../../lib/muscles'
+import type { Exercise, LiftSet, MuscleId } from '../../types'
 import ExercisePicker from '../../components/ExercisePicker'
 import './LogForm.css'
 
 export default function LogLift() {
-  const [exercises] = useState(() => allExercises(loadDB()))
+  const [exercises, setExercises] = useState(() => allExercises(loadDB()))
   const [exerciseId, setExerciseId] = useState<string | null>(null)
-  const [weightKg, setWeightKg] = useState(0)
-  const [reps, setReps] = useState(0)
+  const [weightKg, setWeightKg] = useState<number | ''>('')
+  const [reps, setReps] = useState<number | ''>('')
   const [sets, setSets] = useState<LiftSet[]>([])
   const [notes, setNotes] = useState('')
   const [saved, setSaved] = useState(false)
@@ -24,13 +26,30 @@ export default function LogLift() {
   const selectExercise = (id: string) => {
     setExerciseId(id)
     const last = lastSetForExercise(loadDB(), id)
-    setWeightKg(last?.weightKg ?? 0)
-    setReps(last?.reps ?? 0)
+    setWeightKg(last?.weightKg ?? '')
+    setReps(last?.reps ?? '')
+  }
+
+  const handleCreateExercise = (
+    name: string,
+    muscle: MuscleId,
+    bodyweight: boolean,
+  ) => {
+    const exercise: Exercise = {
+      id: newId(),
+      name,
+      category: categoryForMuscle(muscle),
+      bodyweight,
+      muscles: { [muscle]: 1.0 },
+    }
+    addCustomExercise(exercise)
+    setExercises((prev) => [...prev, exercise])
+    selectExercise(exercise.id)
   }
 
   const addSet = () => {
-    if (!exerciseId || reps <= 0) return
-    setSets([...sets, { exerciseId, weightKg, reps }])
+    if (!exerciseId || reps === '' || reps <= 0) return
+    setSets([...sets, { exerciseId, weightKg: weightKg === '' ? 0 : weightKg, reps }])
   }
 
   const duplicateLastSet = () => {
@@ -76,6 +95,8 @@ export default function LogLift() {
         exercises={exercises}
         selectedId={exerciseId}
         onSelect={selectExercise}
+        onDeselect={() => setExerciseId(null)}
+        onCreateExercise={handleCreateExercise}
       />
 
       {exerciseId && (
@@ -86,7 +107,9 @@ export default function LogLift() {
               type="number"
               inputMode="decimal"
               value={weightKg}
-              onChange={(e) => setWeightKg(Number(e.target.value))}
+              onChange={(e) =>
+                setWeightKg(e.target.value === '' ? '' : Number(e.target.value))
+              }
             />
           </div>
           <div className="log-form__field">
@@ -95,7 +118,9 @@ export default function LogLift() {
               type="number"
               inputMode="decimal"
               value={reps}
-              onChange={(e) => setReps(Number(e.target.value))}
+              onChange={(e) =>
+                setReps(e.target.value === '' ? '' : Number(e.target.value))
+              }
             />
           </div>
         </div>
