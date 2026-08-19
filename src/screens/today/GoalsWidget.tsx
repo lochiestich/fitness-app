@@ -16,10 +16,10 @@ export default function GoalsWidget({ sessions }: Props) {
   const weekStart = startOfWeek(today)
   const weekSessions = sessionsInRange(sessions, weekStart, today)
   const liftCount = weekSessions.filter((s) => s.type === 'lift').length
-  const cardioCount = weekSessions.filter((s) => s.type === 'cardio').length
-  const chukkas = weekSessions
-    .filter((s): s is Session & { type: 'polo' } => s.type === 'polo')
-    .reduce((sum, s) => sum + s.chukkas, 0)
+  // Polo counts toward cardio -- it's just another activity, not tracked separately.
+  const cardioCount = weekSessions.filter(
+    (s) => s.type === 'cardio' || s.type === 'polo',
+  ).length
 
   return (
     <div className="goals-widget">
@@ -35,10 +35,6 @@ export default function GoalsWidget({ sessions }: Props) {
         label="Cardio"
         color="var(--color-type-cardio)"
       />
-      <div className={chukkas > 0 ? 'polo-badge polo-badge--active' : 'polo-badge'}>
-        <span className="polo-badge__value">{chukkas}</span>
-        <span className="polo-badge__label">Chukkas</span>
-      </div>
     </div>
   )
 }

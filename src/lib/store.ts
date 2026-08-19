@@ -1,4 +1,4 @@
-import type { DB, Exercise, LiftSession, LiftSet, Session } from '../types'
+import type { BodyweightLog, DB, Exercise, LiftSession, LiftSet, Session } from '../types'
 import exercisesSeed from '../data/exercises.json'
 import horsesSeed from '../data/horses.json'
 
@@ -13,6 +13,7 @@ function defaultDB(): DB {
     },
     customExercises: [],
     sessions: [],
+    bodyweightLogs: [],
   }
 }
 
@@ -22,7 +23,7 @@ export function loadDB(): DB {
   try {
     const parsed = JSON.parse(raw) as DB
     if (parsed.version !== 1) return defaultDB()
-    return parsed
+    return { ...parsed, bodyweightLogs: parsed.bodyweightLogs ?? [] }
   } catch {
     return defaultDB()
   }
@@ -118,6 +119,24 @@ export function knownHorses(db: DB): string[] {
     if (session.type === 'polo') session.horses.forEach((h) => names.add(h))
   }
   return [...names].sort()
+}
+
+export function addBodyweightLog(date: string, weightKg: number): DB {
+  const db = loadDB()
+  const index = db.bodyweightLogs.findIndex((l) => l.date === date)
+  if (index === -1) db.bodyweightLogs.push({ date, weightKg })
+  else db.bodyweightLogs[index] = { date, weightKg }
+  saveDB(db)
+  return db
+}
+
+export function bodyweightLogsSorted(db: DB): BodyweightLog[] {
+  return [...db.bodyweightLogs].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
+}
+
+export function currentBodyweightKg(db: DB): number {
+  const sorted = bodyweightLogsSorted(db)
+  return sorted.length > 0 ? sorted[sorted.length - 1].weightKg : db.settings.bodyweightKg
 }
 
 export function exportJSON(): string {

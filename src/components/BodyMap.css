@@ -22,18 +22,9 @@
   fill: var(--color-border);
 }
 
-.body-map__region {
-  cursor: pointer;
-}
-
-.body-map__region rect:not([fill='transparent']) {
+.body-map__figure rect {
   stroke: var(--color-bg);
   stroke-width: 1;
-}
-
-.body-map__region--selected rect:not([fill='transparent']) {
-  stroke: var(--color-text);
-  stroke-width: 2;
 }
 
 .body-map__caption {

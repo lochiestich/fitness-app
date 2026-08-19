@@ -75,9 +75,15 @@ export type Settings = {
   weeklySessionTarget: number
 }
 
+export type BodyweightLog = {
+  date: string
+  weightKg: number
+}
+
 export type DB = {
   version: 1
   settings: Settings
   customExercises: Exercise[]
   sessions: Session[]
+  bodyweightLogs: BodyweightLog[]
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { allExercises, loadDB, todayLocalDate } from '../lib/store'
+import { allExercises, currentBodyweightKg, loadDB, todayLocalDate } from '../lib/store'
 import StreakBar from './today/StreakBar'
 import GoalsWidget from './today/GoalsWidget'
 import LeastLoaded from './today/LeastLoaded'
@@ -18,7 +18,7 @@ export default function Today() {
       <LeastLoaded
         sessions={db.sessions}
         exercises={exercises}
-        bodyweightKg={db.settings.bodyweightKg}
+        bodyweightKg={currentBodyweightKg(db)}
         referenceDate={todayLocalDate()}
       />
       <RecentSessions db={db} onChange={() => setDb(loadDB())} />

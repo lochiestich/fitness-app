@@ -1,0 +1,40 @@
+.muscle-scores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.muscle-scores__row {
+  display: grid;
+  grid-template-columns: 84px 1fr 28px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.muscle-scores__label {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.muscle-scores__bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.muscle-scores__bar {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 4px;
+}
+
+.muscle-scores__value {
+  text-align: right;
+  font-size: var(--font-size-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}

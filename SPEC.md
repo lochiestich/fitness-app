@@ -124,37 +124,35 @@ The one number that makes lifting, swimming and chukkas comparable. If a lifting
 Bottom tab bar, four tabs. Thumb reach matters, this gets used between sets with one hand.
 
 ### Today
-- This week: sessions, total load, chukkas
-- Three big buttons: Log lift, Log cardio, Log polo
+- A 7-day streak bar (M–S) under the title: a pip per day, filled when any session happened that day, current day marked, future days dashed
+- Weekly goals widget: a progress ring for Lifts and one for Cardio (target fixed at 3 each for now, not user-editable). Polo counts toward the Cardio ring, it isn't tracked separately
 - Least loaded muscle groups over the last 10 days, as a plain sentence
-- Recent sessions, tap to open, swipe or long press to delete
+- Recent sessions, tap to open, long press to delete
 
 ### Log
-Segmented control at the top: Lift / Cardio / Polo.
+Segmented control at the top: Lift / Cardio. Polo is not a separate tab — it's an activity choice inside Cardio (see below), so logging it still produces a `type: 'polo'` session under the hood, just reached through the Cardio form.
 
 **Lift** is the one that has to be fast. Target is under 30 seconds for a full session entry.
-- Search or pick an exercise
+- Search, or browse by broad muscle group (Chest/Shoulders/Back/Arms/Legs/Core), each backed by the fixed 15 muscle IDs
 - Weight and reps prefill from the last time that exercise was used
 - Add set, duplicate last set, remove set
-- "Repeat last lifting session" prefills the whole thing
+- "Repeat last session" prefills the whole thing
+- Autosaves continuously to a single running session for the day — no explicit save/finish step
+- Supersets: build a circuit of 2+ exercises, then log one round (weight/reps per exercise) at a time; rounds are tagged and shown grouped in the set list
 
-**Cardio**: activity, duration, optional distance with a km/m/mi selector, RPE, notes.
-
-**Polo**: chukkas, duration (defaults to chukkas × 7.5 min), horses as a chip list with autocomplete from previous entries, RPE, notes.
+**Cardio**: activity (Run, Swim, Polo, Cycle, Row, Walk, Other), duration, optional distance with a km/m/mi selector, RPE, notes. Choosing **Polo** swaps the distance field for chukkas and adds a horse chip picker (autocomplete from a seeded roster plus anything logged before); duration is then auto-computed as chukkas × 7.5 min and RPE is hidden, matching how the standalone Polo form worked before the merge.
 
 ### Body
-The signature screen. Front and back silhouette, fifteen regions, coloured by fatigue on a cool to hot ramp. Legend states plainly that hot means recently loaded, not that it needs work.
+Front and back silhouette, coloured by fatigue on a cool to hot ramp, legend states plainly that hot means recently loaded, not that it needs work. Not tap-to-drill-down — a plain score list (0–100, most loaded first) sits underneath the map instead, one row per visual region (Shoulders is shown as one region combining front/side delts; every other region is a single muscle).
 
-Tap a muscle to see days since last worked, volume over 7 and 28 days, and which exercises contributed.
-
-Below the map: horizontal bars, volume by muscle group, 7 day and 28 day toggle.
+Below that: horizontal bars, volume by muscle group, 7 day and 28 day toggle.
 
 ### Progress
 - Weekly training load, last 12 weeks
 - Consistency grid, last 12 weeks, one cell per day coloured by session type
 - Lifting: pick an exercise, see e1RM over time plus the best set
-- Cardio: pick an activity, see pace over time and weekly distance
-- Polo: chukkas per week, and a tally of horses played
+- Cardio: pick an activity, see pace over time and weekly distance (polo isn't included here — no pace/distance concept applies)
+- Bodyweight: log a weigh-in, see it over time; the latest entry becomes the current bodyweight used everywhere else
 - Personal records, auto detected
 - Data: export CSV, export JSON backup, import JSON backup
 
@@ -189,4 +187,4 @@ Ship each phase to the phone before starting the next. If phase 0 is not on the 
 
 **Storage layer isolation.** All reads and writes go through `src/lib/store.ts`. Nothing else in the app touches localStorage directly. When the data outgrows it, swapping to IndexedDB is one file.
 
-**Bodyweight changes over time.** v1 uses a single current bodyweight for historical calculations, which is slightly wrong. Accept it, note it, do not build a bodyweight history table yet.
+**Bodyweight changes over time.** A bodyweight log now exists (`DB.bodyweightLogs`, logged from Progress) so weight can actually be tracked. Load calculations still use a single *current* value (the most recent log entry, falling back to `settings.bodyweightKg` if none exist) applied uniformly across all history — a bodyweight-corrected past is still out of scope, only the current value updates automatically now instead of needing a manual settings edit.
