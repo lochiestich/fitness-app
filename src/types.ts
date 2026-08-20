@@ -32,6 +32,10 @@ export type LiftSet = {
   rpe?: number
   supersetId?: string
   round?: number
+  // Logged as one side at a time (e.g. dumbbell curls, single-leg extension).
+  // weightKg/reps stay what was actually done on one side; volume-based stats
+  // double it to represent both sides. Never doubled for e1RM/PRs -- see SPEC.md §5.
+  unilateral?: boolean
 }
 
 export type CardioActivity = 'run' | 'swim' | 'cycle' | 'row' | 'walk' | 'other'

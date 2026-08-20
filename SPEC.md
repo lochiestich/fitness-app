@@ -82,7 +82,10 @@ type LiftSet = {
   exerciseId: string
   weightKg: number           // added weight; 0 for pure bodyweight
   reps: number
-  rpe?: number               // 1 to 10
+  rpe?: number                // 1 to 10
+  supersetId?: string          // groups sets logged together as a circuit round
+  round?: number
+  unilateral?: boolean         // logged one side at a time; weightKg/reps stay per-side
 }
 ```
 
@@ -99,7 +102,8 @@ All calculated on read. Nothing derived is ever stored.
 **Load for a set**
 `bodyweight ? settings.bodyweightKg + weightKg : weightKg`
 
-**Set volume** = load × reps
+**Set volume** = load × reps × (2 if `unilateral`, else 1)
+A unilateral set (dumbbell curl, single-leg extension) is logged at the weight and reps actually done on one side — the same exercise can be logged unilaterally one session and bilaterally the next, it's a per-set choice, not a property of the exercise. Doubling only feeds volume-based numbers (muscle volume, the Body screen's fatigue). e1RM and PRs never double: they track the actual per-side weight, since a "1RM" that doesn't correspond to what was ever on the dumbbell isn't meaningful.
 
 **Muscle volume** = Σ over sets of (set volume × muscle factor)
 

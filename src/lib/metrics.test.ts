@@ -108,6 +108,21 @@ describe('muscleVolumeForSession', () => {
     const totals = muscleVolumeForSession(session, exercises, 75)
     expect(totals).toEqual({})
   })
+
+  it('doubles volume for a unilateral set, to account for both sides', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8, unilateral: true },
+      ],
+    }
+    const totals = muscleVolumeForSession(session, exercises, 75)
+    // 60kg x 8 reps x 2 sides = 960 volume
+    expect(totals.chest).toBe(960)
+    expect(totals.triceps).toBe(480)
+  })
 })
 
 describe('sessionLoad', () => {
@@ -419,6 +434,22 @@ describe('bestSetForExercise', () => {
     const best = bestSetForExercise(sessions, exercises, 75, 'barbell_bench_press')
     expect(best?.date).toBe('2026-08-17')
     expect(best?.weightKg).toBe(80)
+  })
+
+  it('never doubles a unilateral set -- e1RM/PRs track the actual per-side weight', () => {
+    const sessions: LiftSession[] = [
+      {
+        id: '1',
+        date: '2026-08-10',
+        type: 'lift',
+        sets: [
+          { exerciseId: 'barbell_bench_press', weightKg: 15, reps: 10, unilateral: true },
+        ],
+      },
+    ]
+    const best = bestSetForExercise(sessions, exercises, 75, 'barbell_bench_press')
+    expect(best?.weightKg).toBe(15)
+    expect(best?.e1rm).toBeCloseTo(15 * (1 + 10 / 30))
   })
 })
 

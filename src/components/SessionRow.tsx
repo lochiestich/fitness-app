@@ -67,6 +67,7 @@ export default function SessionRow({ session, exercises, onDeleted }: Props) {
             session.sets.map((s, i) => (
               <div key={i}>
                 {exerciseName(s.exerciseId)} — {s.weightKg}kg × {s.reps}
+                {s.unilateral ? ' (each side)' : ''}
               </div>
             ))}
           {session.type === 'cardio' && (

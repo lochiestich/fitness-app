@@ -65,6 +65,7 @@ export default function LogLift({ date }: Props) {
   const [exerciseId, setExerciseId] = useState<string | null>(null)
   const [weightKg, setWeightKg] = useState<number | ''>('')
   const [reps, setReps] = useState<number | ''>('')
+  const [unilateral, setUnilateral] = useState(false)
   const [previousSet, setPreviousSet] = useState<LiftSet | undefined>(undefined)
 
   const [mode, setMode] = useState<Mode>('single')
@@ -93,6 +94,7 @@ export default function LogLift({ date }: Props) {
     setPreviousSet(last)
     setWeightKg(last?.weightKg ?? '')
     setReps(last?.reps ?? '')
+    setUnilateral(last?.unilateral ?? false)
   }
 
   const handleCreateExercise = (
@@ -115,7 +117,15 @@ export default function LogLift({ date }: Props) {
 
   const addSet = () => {
     if (!exerciseId || reps === '' || reps <= 0) return
-    const next = [...sets, { exerciseId, weightKg: weightKg === '' ? 0 : weightKg, reps }]
+    const next = [
+      ...sets,
+      {
+        exerciseId,
+        weightKg: weightKg === '' ? 0 : weightKg,
+        reps,
+        ...(unilateral ? { unilateral: true } : {}),
+      },
+    ]
     setSets(next)
     persist(next, notes)
   }
@@ -143,6 +153,9 @@ export default function LogLift({ date }: Props) {
 
   const exerciseName = (id: string) =>
     exercises.find((e) => e.id === id)?.name ?? id
+
+  const setLabel = (set: LiftSet) =>
+    `${set.weightKg}kg × ${set.reps}${set.unilateral ? ' (each side)' : ''}`
 
   const startSuperset = () => {
     setExerciseId(null)
@@ -261,6 +274,17 @@ export default function LogLift({ date }: Props) {
           )}
 
           {exerciseId && (
+            <label className="log-form__checkbox">
+              <input
+                type="checkbox"
+                checked={unilateral}
+                onChange={(e) => setUnilateral(e.target.checked)}
+              />
+              One side at a time (doubled for volume, not for e1RM/PRs)
+            </label>
+          )}
+
+          {exerciseId && (
             <div className="log-form__row">
               <button type="button" className="log-form__button" onClick={addSet}>
                 Add set
@@ -308,7 +332,7 @@ export default function LogLift({ date }: Props) {
             item.kind === 'single' ? (
               <div className="log-form__set" key={item.index}>
                 <span className="log-form__set-info">
-                  {exerciseName(item.set.exerciseId)} — {item.set.weightKg}kg × {item.set.reps}
+                  {exerciseName(item.set.exerciseId)} — {setLabel(item.set)}
                 </span>
                 <button
                   type="button"
@@ -325,7 +349,7 @@ export default function LogLift({ date }: Props) {
                 {item.entries.map(({ index, set }) => (
                   <div className="log-form__set log-form__set--grouped" key={index}>
                     <span className="log-form__set-info">
-                      {exerciseName(set.exerciseId)} — {set.weightKg}kg × {set.reps}
+                      {exerciseName(set.exerciseId)} — {setLabel(set)}
                     </span>
                     <button
                       type="button"

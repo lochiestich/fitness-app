@@ -68,7 +68,7 @@ export function muscleVolumeForSession(
     const exercise = exercises.find((e) => e.id === set.exerciseId)
     if (!exercise) continue
     const load = loadForSet(set.weightKg, exercise.bodyweight, bodyweightKg)
-    const volume = load * set.reps
+    const volume = load * set.reps * (set.unilateral ? 2 : 1)
     for (const [muscle, factor] of Object.entries(exercise.muscles)) {
       const id = muscle as MuscleId
       totals[id] = (totals[id] ?? 0) + volume * (factor ?? 0)
