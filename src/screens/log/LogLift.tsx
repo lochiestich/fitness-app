@@ -65,6 +65,7 @@ export default function LogLift({ date }: Props) {
   const [exerciseId, setExerciseId] = useState<string | null>(null)
   const [weightKg, setWeightKg] = useState<number | ''>('')
   const [reps, setReps] = useState<number | ''>('')
+  const [previousSet, setPreviousSet] = useState<LiftSet | undefined>(undefined)
 
   const [mode, setMode] = useState<Mode>('single')
   const [circuitIds, setCircuitIds] = useState<string[]>([])
@@ -89,6 +90,7 @@ export default function LogLift({ date }: Props) {
   const selectExercise = (id: string) => {
     setExerciseId(id)
     const last = lastSetForExercise(loadDB(), id)
+    setPreviousSet(last)
     setWeightKg(last?.weightKg ?? '')
     setReps(last?.reps ?? '')
   }
@@ -224,6 +226,12 @@ export default function LogLift({ date }: Props) {
             onDeselect={() => setExerciseId(null)}
             onCreateExercise={handleCreateExercise}
           />
+
+          {exerciseId && previousSet && (
+            <p className="log-form__hint">
+              Previous: {previousSet.weightKg}kg × {previousSet.reps}
+            </p>
+          )}
 
           {exerciseId && (
             <div className="log-form__row">
