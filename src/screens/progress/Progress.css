@@ -37,7 +37,29 @@
 }
 
 /* Consistency grid */
+.consistency-grid__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.consistency-grid__header h2 {
+  margin: 0;
+}
+
+.consistency-grid__calendar-link {
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-accent);
+  font-size: var(--font-size-small);
+}
+
 .consistency-grid {
+  margin-top: var(--space-2);
   display: flex;
   gap: 3px;
   overflow-x: auto;

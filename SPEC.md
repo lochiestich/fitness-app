@@ -158,6 +158,11 @@ Below that: horizontal bars, volume by muscle group, 7 day and 28 day toggle.
 
 No streaks, no badges, no guilt copy. Consistency is shown as a grid and a count. A rest week is information, not a failure.
 
+### Calendar and Day (not a tab)
+Reached via "Open calendar" on Progress, not from the bottom tab bar — the bar stays at four. A month grid (Mon–Sun), trained days marked, today outlined; tap a day to open it.
+
+The Day screen lists whatever was logged that date (reusing the same session rows as Today, same tap-to-expand/long-press-to-delete) and an "Add a session for this day" button that opens Log pre-set to that date instead of today — the Lift/Cardio forms already only special-cased `todayLocalDate()` in one place each, so this is the same forms with the date threaded through, not a separate backdating UI. A visible banner ("Logging for YYYY-MM-DD") appears whenever the date being logged isn't today, so it's never ambiguous which day you're editing.
+
 ---
 
 ## 7. Build order

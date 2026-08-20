@@ -5,10 +5,10 @@ import {
   deleteSession,
   lastLiftSession,
   lastSetForExercise,
+  liftSessionOnDate,
   loadDB,
   newId,
   todayLocalDate,
-  todaysLiftSession,
   upsertSession,
 } from '../../lib/store'
 import { categoryForMuscle } from '../../lib/muscles'
@@ -50,14 +50,18 @@ function groupSets(sets: LiftSet[]): SetListItem[] {
   return items
 }
 
-export default function LogLift() {
+type Props = {
+  date?: string
+}
+
+export default function LogLift({ date }: Props) {
   const [exercises, setExercises] = useState(() => allExercises(loadDB()))
-  const today = todayLocalDate()
-  const [sessionId] = useState(() => todaysLiftSession(loadDB(), today)?.id ?? newId())
+  const today = date ?? todayLocalDate()
+  const [sessionId] = useState(() => liftSessionOnDate(loadDB(), today)?.id ?? newId())
   const [sets, setSets] = useState<LiftSet[]>(
-    () => todaysLiftSession(loadDB(), today)?.sets ?? [],
+    () => liftSessionOnDate(loadDB(), today)?.sets ?? [],
   )
-  const [notes, setNotes] = useState(() => todaysLiftSession(loadDB(), today)?.notes ?? '')
+  const [notes, setNotes] = useState(() => liftSessionOnDate(loadDB(), today)?.notes ?? '')
   const [exerciseId, setExerciseId] = useState<string | null>(null)
   const [weightKg, setWeightKg] = useState<number | ''>('')
   const [reps, setReps] = useState<number | ''>('')

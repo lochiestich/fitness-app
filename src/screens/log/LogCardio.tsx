@@ -24,7 +24,11 @@ function toKm(value: number, unit: DistanceUnit): number {
   return value * 1.60934
 }
 
-export default function LogCardio() {
+type Props = {
+  date?: string
+}
+
+export default function LogCardio({ date }: Props) {
   const [activity, setActivity] = useState<CardioActivity | 'polo'>('run')
   const [durationMin, setDurationMin] = useState<number | ''>('')
   const [distanceValue, setDistanceValue] = useState<number | ''>('')
@@ -57,7 +61,7 @@ export default function LogCardio() {
     if (isPolo) {
       addSession({
         id: newId(),
-        date: todayLocalDate(),
+        date: date ?? todayLocalDate(),
         type: 'polo',
         chukkas: chukkas as number,
         durationMin: (chukkas as number) * MIN_PER_CHUKKA,
@@ -67,7 +71,7 @@ export default function LogCardio() {
     } else {
       addSession({
         id: newId(),
-        date: todayLocalDate(),
+        date: date ?? todayLocalDate(),
         type: 'cardio',
         activity,
         durationMin: durationMin as number,

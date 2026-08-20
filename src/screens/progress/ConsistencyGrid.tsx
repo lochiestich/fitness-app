@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { consistencyGrid } from '../../lib/metrics'
 import type { Session } from '../../types'
 import './Progress.css'
@@ -22,6 +23,7 @@ function cellClass(types: Session['type'][]): string {
 }
 
 export default function ConsistencyGrid({ sessions, referenceDate }: Props) {
+  const navigate = useNavigate()
   const days = consistencyGrid(sessions, referenceDate, WEEKS)
   const trainedDays = days.filter((d) => d.types.length > 0).length
 
@@ -31,7 +33,16 @@ export default function ConsistencyGrid({ sessions, referenceDate }: Props) {
 
   return (
     <div className="progress-block">
-      <h2>Consistency</h2>
+      <div className="consistency-grid__header">
+        <h2>Consistency</h2>
+        <button
+          type="button"
+          className="consistency-grid__calendar-link"
+          onClick={() => navigate('/calendar')}
+        >
+          Open calendar
+        </button>
+      </div>
       <div className="consistency-grid">
         {columns.map((week, i) => (
           <div className="consistency-grid__column" key={i}>

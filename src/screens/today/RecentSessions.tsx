@@ -1,6 +1,6 @@
 import type { DB } from '../../types'
 import { allExercises, sessionsMostRecentFirst } from '../../lib/store'
-import SessionRow from './SessionRow'
+import SessionRow from '../../components/SessionRow'
 
 type Props = {
   db: DB

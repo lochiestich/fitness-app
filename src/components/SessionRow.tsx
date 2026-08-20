@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
-import type { Exercise, Session } from '../../types'
-import { deleteSession } from '../../lib/store'
+import type { Exercise, Session } from '../types'
+import { deleteSession } from '../lib/store'
+import './SessionRow.css'
 
 type Props = {
   session: Session

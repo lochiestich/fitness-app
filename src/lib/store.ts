@@ -94,9 +94,9 @@ export function lastLiftSession(
   )
 }
 
-export function todaysLiftSession(db: DB, today: string): LiftSession | undefined {
+export function liftSessionOnDate(db: DB, date: string): LiftSession | undefined {
   return db.sessions.find(
-    (s): s is LiftSession => s.type === 'lift' && s.date === today,
+    (s): s is LiftSession => s.type === 'lift' && s.date === date,
   )
 }
 
