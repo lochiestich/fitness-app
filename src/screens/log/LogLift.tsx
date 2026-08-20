@@ -330,7 +330,7 @@ export default function LogLift({ date }: Props) {
 
       {sets.length > 0 && (
         <div className="log-form__set-list">
-          {groupSets(sets).map((item) =>
+          {[...groupSets(sets)].reverse().map((item) =>
             item.kind === 'single' ? (
               <div className="log-form__set" key={item.index}>
                 <span className="log-form__set-info">
