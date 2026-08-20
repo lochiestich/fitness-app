@@ -1,11 +1,5 @@
 import { fatigueColor } from '../lib/color'
-import {
-  BACK_REGIONS,
-  BACK_VIEWBOX_HEIGHT,
-  FRONT_REGIONS,
-  FRONT_VIEWBOX_HEIGHT,
-  type BodyRegion,
-} from '../lib/bodyRegions'
+import { REGIONS, FRONT_VIEWBOX, BACK_VIEWBOX } from '../lib/bodyRegions'
 import type { MuscleId } from '../types'
 import './BodyMap.css'
 
@@ -20,40 +14,32 @@ function averageFatigue(fatigue: Record<MuscleId, number>, muscles: MuscleId[]):
 
 function Figure({
   label,
-  regions,
-  viewBoxHeight,
+  view,
+  viewBox,
   fatigue,
 }: {
   label: string
-  regions: BodyRegion[]
-  viewBoxHeight: number
+  view: 'front' | 'back'
+  viewBox: string
   fatigue: Record<MuscleId, number>
 }) {
   return (
     <div className="body-map__figure-wrap">
       <svg
-        viewBox={`0 0 100 ${viewBoxHeight}`}
+        viewBox={viewBox}
         className="body-map__figure"
         role="img"
         aria-label={`${label} view, muscles coloured by recent training load`}
       >
-        <circle cx="50" cy="14" r="12" className="body-map__head" />
-        <rect x="43" y="20" width="14" height="12" rx="4" className="body-map__neck" />
-        {regions.map((region) => (
-          <g key={region.id}>
-            {region.shapes.map((shape, i) => (
-              <rect
-                key={i}
-                x={shape.x}
-                y={shape.y}
-                width={shape.w}
-                height={shape.h}
-                rx={Math.min(shape.w, shape.h) / 2}
-                fill={fatigueColor(averageFatigue(fatigue, region.muscles))}
-              />
-            ))}
-          </g>
-        ))}
+        {REGIONS.map((region) =>
+          region[view].map((d, i) => (
+            <path
+              key={`${region.id}-${i}`}
+              d={d}
+              fill={fatigueColor(averageFatigue(fatigue, region.muscles))}
+            />
+          )),
+        )}
       </svg>
       <span className="body-map__caption">{label}</span>
     </div>
@@ -63,18 +49,8 @@ function Figure({
 export default function BodyMap({ fatigue }: Props) {
   return (
     <div className="body-map">
-      <Figure
-        label="Front"
-        regions={FRONT_REGIONS}
-        viewBoxHeight={FRONT_VIEWBOX_HEIGHT}
-        fatigue={fatigue}
-      />
-      <Figure
-        label="Back"
-        regions={BACK_REGIONS}
-        viewBoxHeight={BACK_VIEWBOX_HEIGHT}
-        fatigue={fatigue}
-      />
+      <Figure label="Front" view="front" viewBox={FRONT_VIEWBOX} fatigue={fatigue} />
+      <Figure label="Back" view="back" viewBox={BACK_VIEWBOX} fatigue={fatigue} />
     </div>
   )
 }

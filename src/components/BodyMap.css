@@ -18,14 +18,9 @@
   height: auto;
 }
 
-.body-map__head,
-.body-map__neck {
-  fill: var(--color-border);
-}
-
-.body-map__figure rect {
+.body-map__figure path {
   stroke: var(--color-bg);
-  stroke-width: 1;
+  stroke-width: 1.2;
 }
 
 .body-map__caption {
