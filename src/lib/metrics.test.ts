@@ -6,7 +6,7 @@ import {
   contributingExercises,
   daysAgo,
   daysSinceLastWorked,
-  decayedMuscleVolume,
+  decayedMuscleSets,
   e1rmHistory,
   horseTally,
   leastLoadedMuscles,
@@ -14,6 +14,7 @@ import {
   loggedCardioActivities,
   loggedExerciseIds,
   muscleFatigue,
+  muscleSetsForSession,
   muscleVolumeForSession,
   muscleVolumeInWindow,
   paceForSession,
@@ -244,7 +245,35 @@ describe('startOfWeek', () => {
   })
 })
 
-describe('decayedMuscleVolume', () => {
+describe('muscleSetsForSession', () => {
+  it('counts one set for a primary mover and a partial set for a secondary mover', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const sets = muscleSetsForSession(session, exercises)
+    expect(sets.chest).toBe(1) // factor 1.0
+    expect(sets.triceps).toBe(0.5) // factor 0.5
+    expect(sets.front_delts).toBeCloseTo(0.4) // factor 0.4
+  })
+
+  it('doubles a unilateral set, same as muscleVolumeForSession', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8, unilateral: true },
+      ],
+    }
+    const sets = muscleSetsForSession(session, exercises)
+    expect(sets.chest).toBe(2)
+  })
+})
+
+describe('decayedMuscleSets', () => {
   it('applies no decay to a session logged today', () => {
     const session: LiftSession = {
       id: '1',
@@ -252,8 +281,8 @@ describe('decayedMuscleVolume', () => {
       type: 'lift',
       sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
     }
-    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
-    expect(decayed.chest).toBeCloseTo(480)
+    const decayed = decayedMuscleSets([session], exercises, '2026-08-19')
+    expect(decayed.chest).toBeCloseTo(1)
   })
 
   it('applies exponential decay based on days ago (half-life 2.5 days)', () => {
@@ -263,9 +292,9 @@ describe('decayedMuscleVolume', () => {
       type: 'lift',
       sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
     }
-    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
-    // 480 * e^(-5/2.5) = 480 * e^-2
-    expect(decayed.chest).toBeCloseTo(480 * Math.exp(-2))
+    const decayed = decayedMuscleSets([session], exercises, '2026-08-19')
+    // 1 * e^(-5/2.5) = e^-2
+    expect(decayed.chest).toBeCloseTo(Math.exp(-2))
   })
 
   it('ignores sessions outside the 10-day lookback', () => {
@@ -275,26 +304,50 @@ describe('decayedMuscleVolume', () => {
       type: 'lift',
       sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
     }
-    const decayed = decayedMuscleVolume([session], exercises, 75, '2026-08-19')
+    const decayed = decayedMuscleSets([session], exercises, '2026-08-19')
     expect(decayed.chest).toBe(0)
   })
 })
 
 describe('muscleFatigue', () => {
   it('is 0 for every muscle when there are no sessions', () => {
-    const fatigue = muscleFatigue([], exercises, 75, '2026-08-19')
+    const fatigue = muscleFatigue([], exercises, '2026-08-19')
     expect(fatigue.chest).toBe(0)
   })
 
-  it('is 1 for a muscle whose only session is today (today is necessarily its own peak)', () => {
+  it('is well under 1 for a single set, and reaches 1 at the 6-set target', () => {
+    const bench = { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }
+    const oneSet: LiftSession = { id: '1', date: '2026-08-19', type: 'lift', sets: [bench] }
+    const sixSets: LiftSession = {
+      id: '2',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: Array(6).fill(bench),
+    }
+    expect(muscleFatigue([oneSet], exercises, '2026-08-19').chest).toBeCloseTo(1 / 6)
+    expect(muscleFatigue([sixSets], exercises, '2026-08-19').chest).toBeCloseTo(1)
+  })
+
+  it('gives a secondary mover half credit relative to the primary mover, same session', () => {
     const session: LiftSession = {
       id: '1',
       date: '2026-08-19',
       type: 'lift',
       sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
     }
-    const fatigue = muscleFatigue([session], exercises, 75, '2026-08-19')
-    expect(fatigue.chest).toBeCloseTo(1)
+    const fatigue = muscleFatigue([session], exercises, '2026-08-19')
+    expect(fatigue.triceps).toBeCloseTo(fatigue.chest * 0.5)
+  })
+
+  it('caps at 1 even when decayed sets exceed the target', () => {
+    const bench = { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: Array(10).fill(bench),
+    }
+    expect(muscleFatigue([session], exercises, '2026-08-19').chest).toBe(1)
   })
 
   it('reads lower for a muscle worked longer ago than one worked recently', () => {
@@ -304,17 +357,10 @@ describe('muscleFatigue', () => {
       type: 'lift',
       sets: [{ exerciseId: 'dips', weightKg: 0, reps: 10 }], // hits triceps
     }
-    const stale: LiftSession = {
-      id: '2',
-      date: '2026-07-20', // outside the fatigue lookback, but still within the 8-week peak window
-      type: 'lift',
-      sets: [{ exerciseId: 'dips', weightKg: 0, reps: 10 }],
-    }
-    const fatigue = muscleFatigue([recent, stale], exercises, 75, '2026-08-19')
-    // recent was worked yesterday (still decaying); stale was worked weeks ago so its
-    // decayed contribution today is ~0, but it set the 8-week peak, so the ratio is < 1
-    expect(fatigue.triceps).toBeGreaterThan(0)
-    expect(fatigue.triceps).toBeLessThan(1)
+    const fresh = muscleFatigue([recent], exercises, '2026-08-19').triceps
+    const stale: LiftSession = { ...recent, id: '2', date: '2026-08-10' }
+    const older = muscleFatigue([stale], exercises, '2026-08-19').triceps
+    expect(fresh).toBeGreaterThan(older)
   })
 })
 

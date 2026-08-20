@@ -114,7 +114,7 @@ Track the best e1RM per exercise per session. This is the improvement line.
 The one number that makes lifting, swimming and chukkas comparable. If a lifting session has no duration, estimate 2.5 minutes per set.
 
 **Muscle fatigue** for the body map, 0 to 1:
-Σ over the last 10 days of (muscle volume that day × e^(−daysAgo / 2.5)), then normalise against that muscle's own rolling 8 week peak. Normalise per muscle, not globally, otherwise quads always read hot and rear delts always read cold.
+A weighted set count, not kg-volume — a set where a muscle is the prime mover (factor 1.0) counts as one set, a secondary mover (factor 0.5) counts as half. Σ over the last 10 days of (weighted sets that day × e^(−daysAgo / 2.5)), divided by a flat target of 6 and capped at 1. A muscle's own peak isn't the reference — a fixed, muscle-agnostic target avoids the day-one problem a self-relative peak has (a muscle's first-ever session was trivially its own peak, so it always read 100% regardless of size). It also doesn't reintroduce "quads always hot, rear delts always cold": a set-count target has no notion of how heavy a muscle's normal working weight is, so 6 sets means the same thing for either.
 
 **Pace**
 - run and walk: min/km

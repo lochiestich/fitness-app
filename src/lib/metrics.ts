@@ -12,7 +12,11 @@ import type {
 const LIFT_SET_DURATION_ESTIMATE_MIN = 2.5
 const FATIGUE_LOOKBACK_DAYS = 10
 const FATIGUE_HALF_LIFE_DAYS = 2.5
-const FATIGUE_PEAK_WINDOW_DAYS = 56
+// Decayed weighted-set count that reads as fully "hot". A set where a muscle is the
+// primary mover (factor 1.0) counts as one set; a secondary mover (e.g. triceps at 0.5
+// in a bench press) counts as half. Flat across muscles on purpose -- weight-agnostic,
+// so it doesn't need quads' heavier kg-volume calibrated against rear delts' lighter one.
+const FATIGUE_SET_TARGET = 6
 
 export function toLocalDateString(d: Date): string {
   const y = d.getFullYear()
@@ -109,10 +113,26 @@ export function leastLoadedMuscles(
     .slice(0, count)
 }
 
-export function decayedMuscleVolume(
+export function muscleSetsForSession(
+  session: LiftSession,
+  exercises: Exercise[],
+): Partial<Record<MuscleId, number>> {
+  const totals: Partial<Record<MuscleId, number>> = {}
+  for (const set of session.sets) {
+    const exercise = exercises.find((e) => e.id === set.exerciseId)
+    if (!exercise) continue
+    const setCount = set.unilateral ? 2 : 1
+    for (const [muscle, factor] of Object.entries(exercise.muscles)) {
+      const id = muscle as MuscleId
+      totals[id] = (totals[id] ?? 0) + setCount * (factor ?? 0)
+    }
+  }
+  return totals
+}
+
+export function decayedMuscleSets(
   sessions: Session[],
   exercises: Exercise[],
-  bodyweightKg: number,
   referenceDate: string,
 ): Record<MuscleId, number> {
   const totals = Object.fromEntries(MUSCLE_IDS.map((m) => [m, 0])) as Record<
@@ -124,7 +144,7 @@ export function decayedMuscleVolume(
     const age = daysAgo(session.date, referenceDate)
     if (age < 0 || age >= FATIGUE_LOOKBACK_DAYS) continue
     const decay = Math.exp(-age / FATIGUE_HALF_LIFE_DAYS)
-    const sessionTotals = muscleVolumeForSession(session, exercises, bodyweightKg)
+    const sessionTotals = muscleSetsForSession(session, exercises)
     for (const [muscle, value] of Object.entries(sessionTotals)) {
       totals[muscle as MuscleId] += (value ?? 0) * decay
     }
@@ -135,27 +155,15 @@ export function decayedMuscleVolume(
 export function muscleFatigue(
   sessions: Session[],
   exercises: Exercise[],
-  bodyweightKg: number,
   referenceDate: string,
 ): Record<MuscleId, number> {
-  const current = decayedMuscleVolume(sessions, exercises, bodyweightKg, referenceDate)
-  const peak = Object.fromEntries(MUSCLE_IDS.map((m) => [m, 0])) as Record<
-    MuscleId,
-    number
-  >
-  for (let d = 0; d < FATIGUE_PEAK_WINDOW_DAYS; d++) {
-    const date = addDays(referenceDate, -d)
-    const decayed = decayedMuscleVolume(sessions, exercises, bodyweightKg, date)
-    for (const m of MUSCLE_IDS) {
-      if (decayed[m] > peak[m]) peak[m] = decayed[m]
-    }
-  }
+  const sets = decayedMuscleSets(sessions, exercises, referenceDate)
   const fatigue = Object.fromEntries(MUSCLE_IDS.map((m) => [m, 0])) as Record<
     MuscleId,
     number
   >
   for (const m of MUSCLE_IDS) {
-    fatigue[m] = peak[m] > 0 ? Math.min(1, current[m] / peak[m]) : 0
+    fatigue[m] = Math.min(1, sets[m] / FATIGUE_SET_TARGET)
   }
   return fatigue
 }

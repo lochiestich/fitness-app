@@ -11,7 +11,7 @@ export default function Body() {
   const exercises = allExercises(db)
   const today = todayLocalDate()
   const bodyweightKg = currentBodyweightKg(db)
-  const fatigue = muscleFatigue(db.sessions, exercises, bodyweightKg, today)
+  const fatigue = muscleFatigue(db.sessions, exercises, today)
 
   return (
     <section>
