@@ -73,8 +73,8 @@ export type BroadGroupId =
 
 export const BROAD_GROUPS: { id: BroadGroupId; label: string; muscles: MuscleId[] }[] = [
   { id: 'chest', label: 'Chest', muscles: ['chest'] },
-  { id: 'shoulders', label: 'Shoulders', muscles: ['front_delts', 'side_delts', 'rear_delts'] },
-  { id: 'back', label: 'Back', muscles: ['lats', 'upper_back', 'lower_back', 'traps'] },
+  { id: 'shoulders', label: 'Shoulders', muscles: ['front_delts', 'side_delts', 'rear_delts', 'traps'] },
+  { id: 'back', label: 'Back', muscles: ['lats', 'upper_back', 'lower_back'] },
   { id: 'biceps', label: 'Biceps', muscles: ['biceps'] },
   { id: 'triceps', label: 'Triceps', muscles: ['triceps'] },
   { id: 'forearms', label: 'Forearms', muscles: ['forearms'] },

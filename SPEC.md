@@ -48,7 +48,7 @@ biceps  triceps  forearms  core  lower_back
 glutes  quads  hamstrings  calves
 ```
 
-`traps` and `upper_back` are traced as separate body-map regions: `traps` is the full trapezius kite (neck to mid-back); `upper_back` is what's left — the scapular/rhomboid boundary between traps, the rear delts and lats. Both browse under the same "Back" broad group in the Log screen's exercise picker.
+`traps` and `upper_back` are traced as separate body-map regions: `traps` is the full trapezius kite (neck to mid-back); `upper_back` is what's left — the scapular/rhomboid boundary between traps, the rear delts and lats. `traps` browses under "Shoulders" in the Log screen's exercise picker (shrugs sit alongside presses and raises); `upper_back` browses under "Back".
 
 ---
 

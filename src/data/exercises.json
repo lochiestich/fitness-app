@@ -31,17 +31,22 @@
   { "id": "hammer_curl", "name": "Hammer Curl", "category": "pull", "bodyweight": false, "muscles": { "biceps": 0.8, "forearms": 0.7 } },
   { "id": "ez_bar_curl", "name": "EZ Bar Curl", "category": "pull", "bodyweight": false, "muscles": { "biceps": 1.0, "forearms": 0.25 } },
   { "id": "preacher_curl", "name": "Preacher Curl", "category": "pull", "bodyweight": false, "muscles": { "biceps": 1.0 } },
+  { "id": "shrug", "name": "Shrug", "category": "pull", "bodyweight": false, "muscles": { "traps": 1.0, "forearms": 0.3 } },
+  { "id": "pronated_curl", "name": "Pronated Curl", "category": "pull", "bodyweight": false, "muscles": { "forearms": 1.0, "biceps": 0.4 } },
+  { "id": "supinated_curl", "name": "Supinated Curl", "category": "pull", "bodyweight": false, "muscles": { "biceps": 1.0, "forearms": 0.3 } },
+  { "id": "ez_bar_reverse_curl", "name": "EZ Bar Reverse Curl", "category": "pull", "bodyweight": false, "muscles": { "forearms": 1.0, "biceps": 0.3 } },
 
   { "id": "leg_press", "name": "Leg Press", "category": "legs", "bodyweight": false, "muscles": { "quads": 1.0, "glutes": 0.5, "hamstrings": 0.2 } },
   { "id": "back_squat", "name": "Squat", "category": "legs", "bodyweight": false, "muscles": { "quads": 1.0, "glutes": 0.7, "lower_back": 0.4, "hamstrings": 0.3, "core": 0.3 } },
   { "id": "leg_extension", "name": "Leg Extension", "category": "legs", "bodyweight": false, "muscles": { "quads": 1.0 } },
   { "id": "leg_curl", "name": "Leg Curl", "category": "legs", "bodyweight": false, "muscles": { "hamstrings": 1.0, "calves": 0.2 } },
-  { "id": "adductor_machine", "name": "Adductor", "category": "legs", "bodyweight": false, "muscles": { "glutes": 0.5, "quads": 0.3 } },
+  { "id": "adductor_machine", "name": "Adductor", "category": "legs", "bodyweight": false, "muscles": { "glutes": 1.0 } },
   { "id": "abductor_machine", "name": "Abductor", "category": "legs", "bodyweight": false, "muscles": { "glutes": 1.0 } },
   { "id": "hip_thrust", "name": "Hip Thrust", "category": "legs", "bodyweight": false, "muscles": { "glutes": 1.0, "hamstrings": 0.4 } },
   { "id": "deep_squat", "name": "Deep Squat", "category": "legs", "bodyweight": false, "muscles": { "quads": 1.0, "glutes": 0.8, "hamstrings": 0.3, "core": 0.3 } },
   { "id": "calf_raise", "name": "Calf Raise", "category": "legs", "bodyweight": false, "muscles": { "calves": 1.0 } },
   { "id": "romanian_deadlift", "name": "Romanian Deadlift (RDL)", "category": "legs", "bodyweight": false, "muscles": { "hamstrings": 1.0, "glutes": 0.7, "lower_back": 0.5, "forearms": 0.3 } },
 
-  { "id": "back_extension", "name": "Back Extension", "category": "core", "bodyweight": true, "muscles": { "lower_back": 1.0, "glutes": 0.5, "hamstrings": 0.4 } }
+  { "id": "back_extension", "name": "Back Extension", "category": "core", "bodyweight": true, "muscles": { "lower_back": 1.0, "glutes": 0.5, "hamstrings": 0.4 } },
+  { "id": "machine_crunch", "name": "Machine Crunch", "category": "core", "bodyweight": false, "muscles": { "core": 1.0 } }
 ]
