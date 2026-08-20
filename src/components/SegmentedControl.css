@@ -10,6 +10,7 @@
 .segmented__item {
   flex: 1;
   min-height: var(--touch-target-min);
+  white-space: nowrap;
   background: transparent;
   border: none;
   border-radius: calc(var(--radius) - 4px);

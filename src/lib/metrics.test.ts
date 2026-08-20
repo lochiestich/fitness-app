@@ -10,6 +10,7 @@ import {
   e1rmHistory,
   horseTally,
   leastLoadedMuscles,
+  liftSummary,
   loadForSet,
   loggedCardioActivities,
   loggedExerciseIds,
@@ -21,6 +22,7 @@ import {
   paceHistory,
   sessionLoad,
   sessionsInRange,
+  setsByBroadGroup,
   startOfWeek,
   weeklyChukkas,
   weeklyDistance,
@@ -218,6 +220,98 @@ describe('leastLoadedMuscles', () => {
     expect(result[0]).toBe('rear_delts')
     expect(result).not.toContain('chest')
     expect(result).toHaveLength(3)
+  })
+})
+
+describe('setsByBroadGroup', () => {
+  it('files each set under its exercise\'s primary mover\'s broad group', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }, // primary: chest
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 },
+        { exerciseId: 'dips', weightKg: 0, reps: 10 }, // primary: triceps
+      ],
+    }
+    const groups = setsByBroadGroup([session], exercises, 7, '2026-08-19')
+    const chest = groups.find((g) => g.id === 'chest')
+    const triceps = groups.find((g) => g.id === 'triceps')
+    expect(chest?.sets).toBe(2)
+    expect(chest?.percent).toBeCloseTo(66.67, 1)
+    expect(triceps?.sets).toBe(1)
+    expect(triceps?.percent).toBeCloseTo(33.33, 1)
+  })
+
+  it('doubles a unilateral set, same as the volume-based breakdowns', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8, unilateral: true },
+      ],
+    }
+    const groups = setsByBroadGroup([session], exercises, 7, '2026-08-19')
+    expect(groups.find((g) => g.id === 'chest')?.sets).toBe(2)
+  })
+
+  it('omits groups with no sets and ignores sessions outside the window', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-01', // outside a 7-day window from the reference date
+      type: 'lift',
+      sets: [{ exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }],
+    }
+    const groups = setsByBroadGroup([session], exercises, 7, '2026-08-19')
+    expect(groups).toEqual([])
+  })
+})
+
+describe('liftSummary', () => {
+  it('totals workouts, sets, reps and volume across lift sessions in the window', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8 }, // volume 480
+        { exerciseId: 'dips', weightKg: 10, reps: 10 }, // load 85, volume 850
+      ],
+    }
+    const summary = liftSummary([session], exercises, 75, 7, '2026-08-19')
+    expect(summary.workouts).toBe(1)
+    expect(summary.sets).toBe(2)
+    expect(summary.reps).toBe(18)
+    expect(summary.volumeKg).toBeCloseTo(1330)
+  })
+
+  it('doubles sets, reps and volume for a unilateral set', () => {
+    const session: LiftSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'lift',
+      sets: [
+        { exerciseId: 'barbell_bench_press', weightKg: 60, reps: 8, unilateral: true },
+      ],
+    }
+    const summary = liftSummary([session], exercises, 75, 7, '2026-08-19')
+    expect(summary.sets).toBe(2)
+    expect(summary.reps).toBe(16)
+    expect(summary.volumeKg).toBeCloseTo(960)
+  })
+
+  it('ignores cardio and polo sessions', () => {
+    const cardio: CardioSession = {
+      id: '1',
+      date: '2026-08-19',
+      type: 'cardio',
+      activity: 'run',
+      durationMin: 30,
+    }
+    const summary = liftSummary([cardio], exercises, 75, 7, '2026-08-19')
+    expect(summary.workouts).toBe(0)
   })
 })
 

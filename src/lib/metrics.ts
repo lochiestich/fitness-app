@@ -1,4 +1,5 @@
-import { MUSCLE_IDS } from './muscles'
+import { BROAD_GROUPS, broadGroupForMuscle, MUSCLE_IDS, primaryMuscle } from './muscles'
+import type { BroadGroupId } from './muscles'
 import type {
   CardioActivity,
   CardioSession,
@@ -111,6 +112,80 @@ export function leastLoadedMuscles(
   return [...MUSCLE_IDS]
     .sort((a, b) => volumeByMuscle[a] - volumeByMuscle[b])
     .slice(0, count)
+}
+
+export type BroadGroupSetCount = {
+  id: BroadGroupId
+  label: string
+  sets: number
+  percent: number
+}
+
+// Each set is filed under its exercise's single primary (highest-weighted) muscle's
+// broad group, so a set counts once -- this is a "what did I train" breakdown, not a
+// volume split like muscleVolumeForSession (where one set can credit several muscles).
+export function setsByBroadGroup(
+  sessions: Session[],
+  exercises: Exercise[],
+  days: number,
+  referenceDate: string,
+): BroadGroupSetCount[] {
+  const counts = new Map<BroadGroupId, number>()
+  let total = 0
+  for (const session of sessions) {
+    if (session.type !== 'lift') continue
+    const age = daysAgo(session.date, referenceDate)
+    if (age < 0 || age >= days) continue
+    for (const set of session.sets) {
+      const exercise = exercises.find((e) => e.id === set.exerciseId)
+      const muscle = exercise && primaryMuscle(exercise)
+      if (!muscle) continue
+      const setCount = set.unilateral ? 2 : 1
+      const groupId = broadGroupForMuscle(muscle).id
+      counts.set(groupId, (counts.get(groupId) ?? 0) + setCount)
+      total += setCount
+    }
+  }
+  return BROAD_GROUPS.map((g) => {
+    const sets = counts.get(g.id) ?? 0
+    return { id: g.id, label: g.label, sets, percent: total > 0 ? (sets / total) * 100 : 0 }
+  })
+    .filter((g) => g.sets > 0)
+    .sort((a, b) => b.sets - a.sets)
+}
+
+export type LiftSummary = {
+  workouts: number
+  sets: number
+  reps: number
+  volumeKg: number
+}
+
+export function liftSummary(
+  sessions: Session[],
+  exercises: Exercise[],
+  bodyweightKg: number,
+  days: number,
+  referenceDate: string,
+): LiftSummary {
+  const summary: LiftSummary = { workouts: 0, sets: 0, reps: 0, volumeKg: 0 }
+  for (const session of sessions) {
+    if (session.type !== 'lift') continue
+    const age = daysAgo(session.date, referenceDate)
+    if (age < 0 || age >= days) continue
+    summary.workouts += 1
+    for (const set of session.sets) {
+      const exercise = exercises.find((e) => e.id === set.exerciseId)
+      const setCount = set.unilateral ? 2 : 1
+      summary.sets += setCount
+      summary.reps += set.reps * setCount
+      if (exercise) {
+        const load = loadForSet(set.weightKg, exercise.bodyweight, bodyweightKg)
+        summary.volumeKg += load * set.reps * setCount
+      }
+    }
+  }
+  return summary
 }
 
 export function muscleSetsForSession(

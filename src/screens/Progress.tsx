@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { allExercises, currentBodyweightKg, loadDB, todayLocalDate } from '../lib/store'
 import WeeklyLoadChart from './progress/WeeklyLoadChart'
 import ConsistencyGrid from './progress/ConsistencyGrid'
+import CategoryBreakdown from './progress/CategoryBreakdown'
 import LiftingProgress from './progress/LiftingProgress'
 import CardioProgress from './progress/CardioProgress'
 import BodyweightProgress from './progress/BodyweightProgress'
@@ -17,6 +18,12 @@ export default function Progress() {
       <h1>Progress</h1>
       <WeeklyLoadChart sessions={db.sessions} referenceDate={today} />
       <ConsistencyGrid sessions={db.sessions} referenceDate={today} />
+      <CategoryBreakdown
+        sessions={db.sessions}
+        exercises={exercises}
+        bodyweightKg={currentBodyweightKg(db)}
+        referenceDate={today}
+      />
       <LiftingProgress
         sessions={db.sessions}
         exercises={exercises}

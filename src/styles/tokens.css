@@ -21,6 +21,17 @@
   --color-type-cardio: #6f9bd8;
   --color-type-polo: #d8a24a;
 
+  /* Broad muscle group, categorical -- fixed order, validated against this
+     file's dark surfaces for CVD-safe adjacent pairs (never cycled/reassigned) */
+  --color-group-chest: #3987e5;
+  --color-group-shoulders: #d95926;
+  --color-group-back: #199e70;
+  --color-group-biceps: #c98500;
+  --color-group-triceps: #d55181;
+  --color-group-forearms: #008300;
+  --color-group-legs: #9085e9;
+  --color-group-core: #e66767;
+
   /* Type */
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
