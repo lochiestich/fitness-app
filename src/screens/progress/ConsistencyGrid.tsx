@@ -9,6 +9,7 @@ type Props = {
 }
 
 const WEEKS = 12
+const WEEKDAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 const TYPE_LABEL: Record<Session['type'], string> = {
   lift: 'Lift',
@@ -44,6 +45,13 @@ export default function ConsistencyGrid({ sessions, referenceDate }: Props) {
         </button>
       </div>
       <div className="consistency-grid">
+        <div className="consistency-grid__column consistency-grid__column--labels">
+          {WEEKDAY_LABELS.map((label, i) => (
+            <span className="consistency-grid__weekday" key={i}>
+              {label}
+            </span>
+          ))}
+        </div>
         {columns.map((week, i) => (
           <div className="consistency-grid__column" key={i}>
             {week.map((day) => (

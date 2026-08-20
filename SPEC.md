@@ -138,11 +138,14 @@ Segmented control at the top: Lift / Cardio. Polo is not a separate tab — it's
 
 **Lift** is the one that has to be fast. Target is under 30 seconds for a full session entry.
 - Search, or browse by broad muscle group (Chest/Shoulders/Back/Biceps/Triceps/Forearms/Legs/Core), each backed by the fixed 15 muscle IDs
-- Weight and reps prefill from the last time that exercise was used
+- Weight and reps prefill from the last time that exercise was used, shown as a "Previous: 70kg × 8" hint
+- A set can be marked unilateral (logged one side at a time) with a per-set checkbox, defaulting to whatever was chosen last time for that exercise; volume-based numbers (muscle volume, Body screen fatigue, the sets-by-category breakdown) double it, e1RM and PRs never do — see §5
+- "Log a previous day" opens the calendar directly from the Log screen (same calendar as Progress → Open calendar) so backdating doesn't require going through Progress first
 - Add set, duplicate last set, remove set
 - "Repeat last session" prefills the whole thing
 - Autosaves continuously to a single running session for the day — no explicit save/finish step
 - Supersets: build a circuit of 2+ exercises, then log one round (weight/reps per exercise) at a time; rounds are tagged and shown grouped in the set list
+- Adding a custom exercise: pick any number of the 15 muscle IDs it trains (not limited to the broad group it was opened from — face pull can be tagged both Upper Back and Rear Delts), each with its own weight (Prime 1.0 / Assist 0.5 / Minor 0.3, the same scale as the seed library — diamond push-ups vs. standard push-ups differ by which muscle gets Prime, not by a finer number). The exercise's category is derived from whichever selected muscle has the highest weight.
 
 **Cardio**: activity (Run, Swim, Polo, Cycle, Row, Walk, Other), duration, optional distance with a km/m/mi selector, RPE, notes. Choosing **Polo** swaps the distance field for chukkas and adds a horse chip picker (autocomplete from a seeded roster plus anything logged before); duration is then auto-computed as chukkas × 7.5 min and RPE is hidden, matching how the standalone Polo form worked before the merge.
 

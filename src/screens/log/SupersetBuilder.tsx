@@ -9,7 +9,11 @@ type Props = {
   onRemove: (exerciseId: string) => void
   onStart: () => void
   onCancel: () => void
-  onCreateExercise: (name: string, muscle: MuscleId, bodyweight: boolean) => void
+  onCreateExercise: (
+    name: string,
+    muscles: Partial<Record<MuscleId, number>>,
+    bodyweight: boolean,
+  ) => void
 }
 
 export default function SupersetBuilder({

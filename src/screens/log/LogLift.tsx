@@ -11,7 +11,7 @@ import {
   todayLocalDate,
   upsertSession,
 } from '../../lib/store'
-import { categoryForMuscle } from '../../lib/muscles'
+import { categoryForMuscle, primaryMuscle } from '../../lib/muscles'
 import type { Exercise, LiftSet, MuscleId } from '../../types'
 import ExercisePicker from '../../components/ExercisePicker'
 import SupersetBuilder from './SupersetBuilder'
@@ -99,16 +99,18 @@ export default function LogLift({ date }: Props) {
 
   const handleCreateExercise = (
     name: string,
-    muscle: MuscleId,
+    muscles: Partial<Record<MuscleId, number>>,
     bodyweight: boolean,
   ) => {
     const exercise: Exercise = {
       id: newId(),
       name,
-      category: categoryForMuscle(muscle),
+      category: 'core',
       bodyweight,
-      muscles: { [muscle]: 1.0 },
+      muscles,
     }
+    const primary = primaryMuscle(exercise)
+    if (primary) exercise.category = categoryForMuscle(primary)
     addCustomExercise(exercise)
     setExercises((prev) => [...prev, exercise])
     if (mode === 'single') selectExercise(exercise.id)

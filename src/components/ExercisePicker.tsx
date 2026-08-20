@@ -10,7 +10,11 @@ type Props = {
   selectedId: string | null
   onSelect: (id: string) => void
   onDeselect: () => void
-  onCreateExercise: (name: string, muscle: MuscleId, bodyweight: boolean) => void
+  onCreateExercise: (
+    name: string,
+    muscles: Partial<Record<MuscleId, number>>,
+    bodyweight: boolean,
+  ) => void
 }
 
 export default function ExercisePicker({
@@ -74,6 +78,7 @@ export default function ExercisePicker({
     <div className="exercise-picker">
       <input
         type="text"
+        className="exercise-picker__search"
         placeholder="Search exercise"
         value={query}
         onChange={(e) => {
@@ -152,9 +157,8 @@ export default function ExercisePicker({
       {adding && group && (
         <AddExerciseForm
           groupLabel={group.label}
-          muscleOptions={group.muscles}
-          onSubmit={(name, muscle, bodyweight) => {
-            onCreateExercise(name, muscle, bodyweight)
+          onSubmit={(name, muscles, bodyweight) => {
+            onCreateExercise(name, muscles, bodyweight)
             setAdding(false)
             setBrowseGroup(null)
           }}
