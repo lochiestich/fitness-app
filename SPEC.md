@@ -40,15 +40,17 @@ The seed library lives in `src/data/exercises.json`. Factors are deliberately co
 
 ## 3. Muscle groups
 
-Sixteen, fixed. These IDs are used everywhere and must never change without a data migration.
+Eighteen, fixed. These IDs are used everywhere and must never change without a data migration.
 
 ```
 chest  front_delts  side_delts  rear_delts  traps  lats  upper_back
 biceps  triceps  forearms  core  lower_back
-glutes  quads  hamstrings  calves
+glutes  abductors  quads  adductors  hamstrings  calves
 ```
 
 `traps` and `upper_back` are traced as separate body-map regions: `traps` is the full trapezius kite (neck to mid-back); `upper_back` is what's left — the scapular/rhomboid boundary between traps, the rear delts and lats. `traps` browses under "Shoulders" in the Log screen's exercise picker (shrugs sit alongside presses and raises); `upper_back` browses under "Back".
+
+`abductors` and `adductors` have no traced body-map region of their own — they share the existing `glutes` and `quads` regions respectively (the same averaging the body map already does for `shoulders`, which blends `front_delts` + `side_delts`). Training Abductor colours the glutes area alongside hip thrusts and squats; training Adductor colours the quads area alongside leg presses and lunges. Volume, fatigue numbers and the Body screen's score list still track all four as fully independent muscles — only the map's visual region is shared. Both browse under "Legs".
 
 ---
 

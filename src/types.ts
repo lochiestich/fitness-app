@@ -12,7 +12,9 @@ export type MuscleId =
   | 'core'
   | 'lower_back'
   | 'glutes'
+  | 'abductors'
   | 'quads'
+  | 'adductors'
   | 'hamstrings'
   | 'calves'
 

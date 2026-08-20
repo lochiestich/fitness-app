@@ -22,7 +22,7 @@ The muscle-weighting map on `Exercise` (`Partial<Record<MuscleId, number>>`) is 
 - `Session` — closed union on `type`: `'lift' | 'cardio' | 'polo'`, each with its own required fields (`LiftSession` has `sets`; `CardioSession` has `activity`/`distanceKm`; `PoloSession` has `chukkas`/`horses`) — `src/types.ts:39-71`. See the Polo name-collision in `../../CONTEXT.md` before assuming Polo is a `CardioSession`.
 - `LiftSet` — `exerciseId`, `weightKg`, `reps`, optional `rpe`, optional `supersetId`/`round` for grouped superset logging — `src/types.ts:28-35`
 - `Exercise` — `id`, `name`, `category` (`push|pull|legs|core`), `bodyweight: boolean`, `muscles: Partial<Record<MuscleId, number>>` — `src/types.ts:20-26`
-- `MuscleId` — 16 fixed string-literal IDs, listed in full at `src/types.ts:1-17` and again (with labels) in `objects/exercise-library/exercises.md`. **Fixed on purpose** — CLAUDE.md hard rule: changing one is a data migration, not an edit.
+- `MuscleId` — 18 fixed string-literal IDs, listed in full at `src/types.ts:1-18` and again (with labels) in `objects/exercise-library/exercises.md`. **Fixed on purpose** — CLAUDE.md hard rule: changing one is a data migration, not an edit.
 - Dates are local `YYYY-MM-DD` strings everywhere, never `Date`/ISO timestamps — SPEC.md §4, enforced by `store.todayLocalDate()` (`src/lib/store.ts:70-76`).
 
 ## Connected to
@@ -35,7 +35,7 @@ The muscle-weighting map on `Exercise` (`Partial<Record<MuscleId, number>>`) is 
 ## If you change this
 
 - **Hits:** every screen (all read `DB` via `loadDB`), `metrics.ts` (every function takes `Session[]`/`Exercise[]` shaped like this), the JSON export/import round-trip (`objects/store/store.md`), `bodyRegions.ts` if you touch `MuscleId`
-- **Does not hit:** `bodyRegions.ts`'s path/contour data itself (keyed by `MuscleId` string, not by shape) — adding a field to `DB` doesn't touch the body map's SVG data, only adding/removing a `MuscleId` does
+- **Does not hit:** `bodyRegions.ts`'s path/contour data itself (keyed by `MuscleId` string, not by shape) — adding a field to `DB` doesn't touch the body map's SVG data. Adding a new `MuscleId` doesn't always need new tracing either: `abductors`/`adductors` (and `shoulders`' `front_delts`+`side_delts` before them) piggyback on an existing region's `muscles: MuscleId[]` array instead of getting their own traced shape — see `objects/body-map/body-regions.md`
 
 ## Surfaces
 

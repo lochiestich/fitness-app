@@ -32,7 +32,7 @@ npm run deploy   # build and push to gh-pages
 - **No network calls.** No fetch, no CDN links, no fonts from Google, no analytics, no error reporting. Everything ships in the bundle. The app must open in airplane mode.
 - **No accounts, no auth, no backend.** If a feature needs a server, it does not go in.
 - **Only `src/lib/store.ts` touches localStorage.** Every other file goes through it.
-- **Muscle IDs are fixed.** The sixteen in SPEC.md section 3. Changing one is a data migration, not an edit.
+- **Muscle IDs are fixed.** The eighteen in SPEC.md section 3. Changing one is a data migration, not an edit.
 - **Never write a derived value into the store.** Volume, e1RM, fatigue and pace are always calculated on read.
 - **Dates are local `YYYY-MM-DD` strings.** Never `toISOString()` on a Date for storage, it shifts the day across timezones.
 - **Do not add features that are not in SPEC.md.** No streaks, no gamification, no social, no AI coach. If something seems missing, ask before building it.

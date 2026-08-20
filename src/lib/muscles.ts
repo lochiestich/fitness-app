@@ -14,7 +14,9 @@ export const MUSCLE_IDS: MuscleId[] = [
   'core',
   'lower_back',
   'glutes',
+  'abductors',
   'quads',
+  'adductors',
   'hamstrings',
   'calves',
 ]
@@ -33,7 +35,9 @@ export const MUSCLE_LABELS: Record<MuscleId, string> = {
   core: 'Core',
   lower_back: 'Lower Back',
   glutes: 'Glutes',
+  abductors: 'Abductors',
   quads: 'Quads',
+  adductors: 'Adductors',
   hamstrings: 'Hamstrings',
   calves: 'Calves',
 }
@@ -52,7 +56,9 @@ const MUSCLE_TO_CATEGORY: Record<MuscleId, ExerciseCategory> = {
   lower_back: 'core',
   core: 'core',
   glutes: 'legs',
+  abductors: 'legs',
   quads: 'legs',
+  adductors: 'legs',
   hamstrings: 'legs',
   calves: 'legs',
 }
@@ -78,7 +84,7 @@ export const BROAD_GROUPS: { id: BroadGroupId; label: string; muscles: MuscleId[
   { id: 'biceps', label: 'Biceps', muscles: ['biceps'] },
   { id: 'triceps', label: 'Triceps', muscles: ['triceps'] },
   { id: 'forearms', label: 'Forearms', muscles: ['forearms'] },
-  { id: 'legs', label: 'Legs', muscles: ['glutes', 'quads', 'hamstrings', 'calves'] },
+  { id: 'legs', label: 'Legs', muscles: ['glutes', 'abductors', 'quads', 'adductors', 'hamstrings', 'calves'] },
   { id: 'core', label: 'Core', muscles: ['core'] },
 ]
 
