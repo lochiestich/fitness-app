@@ -3,6 +3,10 @@
   flex-direction: column;
   gap: var(--space-2);
   margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 
 .muscle-scores__row {
@@ -22,13 +26,12 @@
 .muscle-scores__bar-track {
   height: 8px;
   border-radius: 4px;
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   overflow: hidden;
 }
 
 .muscle-scores__bar {
   height: 100%;
-  background: var(--color-accent);
   border-radius: 4px;
 }
 

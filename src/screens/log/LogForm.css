@@ -88,8 +88,16 @@
   font-variant-numeric: tabular-nums;
 }
 
-.log-form__set .log-form__button {
+.log-form__set-remove {
   flex-shrink: 0;
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-large);
+  line-height: 1;
 }
 
 .log-form__status {

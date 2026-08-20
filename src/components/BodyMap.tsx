@@ -38,6 +38,7 @@ function Figure({
         aria-label={`${label} view, muscles coloured by recent training load`}
       >
         <circle cx="50" cy="14" r="12" className="body-map__head" />
+        <rect x="43" y="20" width="14" height="12" rx="4" className="body-map__neck" />
         {regions.map((region) => (
           <g key={region.id}>
             {region.shapes.map((shape, i) => (

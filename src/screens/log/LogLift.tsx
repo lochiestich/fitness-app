@@ -300,10 +300,11 @@ export default function LogLift() {
                 </span>
                 <button
                   type="button"
-                  className="log-form__button"
+                  className="log-form__set-remove"
+                  aria-label="Remove set"
                   onClick={() => removeSet(item.index)}
                 >
-                  Remove
+                  ×
                 </button>
               </div>
             ) : (
@@ -316,10 +317,11 @@ export default function LogLift() {
                     </span>
                     <button
                       type="button"
-                      className="log-form__button"
+                      className="log-form__set-remove"
+                      aria-label="Remove set"
                       onClick={() => removeSet(index)}
                     >
-                      Remove
+                      ×
                     </button>
                   </div>
                 ))}

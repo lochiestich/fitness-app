@@ -1,5 +1,9 @@
 .volume-bars {
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 
 .volume-bars__header {
@@ -11,9 +15,6 @@
 }
 
 .volume-bars__header h2 {
-  font-size: var(--font-size-body);
-  color: var(--color-text-muted);
-  font-weight: normal;
   margin: 0;
 }
 

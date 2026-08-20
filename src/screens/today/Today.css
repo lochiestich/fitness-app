@@ -1,7 +1,10 @@
+.today-overview {
+  margin-top: var(--space-3);
+}
+
 .streak-bar {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--space-2);
 }
 
 .streak-bar__day {
@@ -44,23 +47,23 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-5);
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
 }
 
 .least-loaded {
   margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
   color: var(--color-text-muted);
   font-size: var(--font-size-body);
 }
 
 .recent-sessions {
-  margin-top: var(--space-3);
-}
-
-.recent-sessions h2 {
-  font-size: var(--font-size-body);
-  color: var(--color-text-muted);
-  font-weight: normal;
+  margin-top: var(--space-4);
 }
 
 .recent-sessions__empty {

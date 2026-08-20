@@ -13,8 +13,10 @@ export default function Today() {
   return (
     <section>
       <h1>Today</h1>
-      <StreakBar sessions={db.sessions} />
-      <GoalsWidget sessions={db.sessions} />
+      <div className="card today-overview">
+        <StreakBar sessions={db.sessions} />
+        <GoalsWidget sessions={db.sessions} />
+      </div>
       <LeastLoaded
         sessions={db.sessions}
         exercises={exercises}

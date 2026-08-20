@@ -31,7 +31,7 @@ export const FRONT_REGIONS: BodyRegion[] = [
     id: 'chest',
     label: 'Chest',
     muscles: ['chest'],
-    shapes: [{ x: 30, y: 38, w: 40, h: 26 }],
+    shapes: [{ x: 28, y: 38, w: 44, h: 26 }],
   },
   {
     id: 'biceps',
@@ -82,7 +82,7 @@ export const BACK_REGIONS: BodyRegion[] = [
     id: 'upper_back',
     label: 'Upper Back',
     muscles: ['upper_back'],
-    shapes: [{ x: 30, y: 38, w: 40, h: 22 }],
+    shapes: [{ x: 28, y: 38, w: 44, h: 22 }],
   },
   {
     id: 'triceps',

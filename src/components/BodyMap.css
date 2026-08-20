@@ -18,7 +18,8 @@
   height: auto;
 }
 
-.body-map__head {
+.body-map__head,
+.body-map__neck {
   fill: var(--color-border);
 }
 
