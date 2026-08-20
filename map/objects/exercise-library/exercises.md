@@ -18,9 +18,9 @@ The seed library is a flat JSON array, not code, so it can be extended without t
 
 - `exercises.json` — 47 seed exercises, each `{ id, name, category, bodyweight, muscles: {...weights} }` — `src/data/exercises.json`
 - `horses.json` — separate seed list, a roster of horse names for the Polo form's chip picker (unrelated to muscles, lives in the same `data/` folder because it's the app's only other seed data) — `src/data/horses.json`
-- `MUSCLE_IDS` / `MUSCLE_LABELS` — the 15 fixed IDs and their display labels — `src/lib/muscles.ts:3-37`
-- `BROAD_GROUPS` — the exercise picker's browse categories: Chest, Shoulders, Back, **Biceps, Triceps, Forearms** (split out from a single "Arms" group this session), Legs, Core — `src/lib/muscles.ts:71-79`. Each group lists which `MuscleId`s it covers; `broadGroupForMuscle()` looks up a muscle's group.
-- `primaryMuscle(exercise)` — highest-weighted muscle in an `Exercise.muscles` map, used to sort a newly-added custom exercise into the right browse group — `src/lib/muscles.ts:86-96`
+- `MUSCLE_IDS` / `MUSCLE_LABELS` — the 16 fixed IDs and their display labels — `src/lib/muscles.ts:3-39`
+- `BROAD_GROUPS` — the exercise picker's browse categories: Chest, Shoulders, Back (includes Traps), Biceps, Triceps, Forearms, Legs, Core — `src/lib/muscles.ts:74-82`. Each group lists which `MuscleId`s it covers; `broadGroupForMuscle()` looks up a muscle's group. `traps` and `upper_back` both browse under Back even though they're separate body-map regions (see `objects/body-map/body-regions.md`) — there's no dedicated Traps browse button.
+- `primaryMuscle(exercise)` — highest-weighted muscle in an `Exercise.muscles` map, used to sort a newly-added custom exercise into the right browse group (and, since this session, to derive a multi-muscle custom exercise's `category`) — `src/lib/muscles.ts:89-99`
 
 ## Connected to
 

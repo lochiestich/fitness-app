@@ -3,6 +3,7 @@ export type MuscleId =
   | 'front_delts'
   | 'side_delts'
   | 'rear_delts'
+  | 'traps'
   | 'lats'
   | 'upper_back'
   | 'biceps'

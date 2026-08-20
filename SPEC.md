@@ -40,13 +40,15 @@ The seed library lives in `src/data/exercises.json`. Factors are deliberately co
 
 ## 3. Muscle groups
 
-Fifteen, fixed. These IDs are used everywhere and must never change without a data migration.
+Sixteen, fixed. These IDs are used everywhere and must never change without a data migration.
 
 ```
-chest  front_delts  side_delts  rear_delts  lats  upper_back
+chest  front_delts  side_delts  rear_delts  traps  lats  upper_back
 biceps  triceps  forearms  core  lower_back
 glutes  quads  hamstrings  calves
 ```
+
+`traps` and `upper_back` are traced as separate body-map regions: `traps` is the full trapezius kite (neck to mid-back); `upper_back` is what's left — the scapular/rhomboid boundary between traps, the rear delts and lats. Both browse under the same "Back" broad group in the Log screen's exercise picker.
 
 ---
 

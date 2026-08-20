@@ -22,7 +22,7 @@ The muscle-weighting map on `Exercise` (`Partial<Record<MuscleId, number>>`) is 
 - `Session` — closed union on `type`: `'lift' | 'cardio' | 'polo'`, each with its own required fields (`LiftSession` has `sets`; `CardioSession` has `activity`/`distanceKm`; `PoloSession` has `chukkas`/`horses`) — `src/types.ts:39-71`. See the Polo name-collision in `../../CONTEXT.md` before assuming Polo is a `CardioSession`.
 - `LiftSet` — `exerciseId`, `weightKg`, `reps`, optional `rpe`, optional `supersetId`/`round` for grouped superset logging — `src/types.ts:28-35`
 - `Exercise` — `id`, `name`, `category` (`push|pull|legs|core`), `bodyweight: boolean`, `muscles: Partial<Record<MuscleId, number>>` — `src/types.ts:20-26`
-- `MuscleId` — 15 fixed string-literal IDs, listed in full at `src/types.ts:1-16` and again (with labels) in `objects/exercise-library/exercises.md`. **Fixed on purpose** — CLAUDE.md hard rule: changing one is a data migration, not an edit.
+- `MuscleId` — 16 fixed string-literal IDs, listed in full at `src/types.ts:1-17` and again (with labels) in `objects/exercise-library/exercises.md`. **Fixed on purpose** — CLAUDE.md hard rule: changing one is a data migration, not an edit.
 - Dates are local `YYYY-MM-DD` strings everywhere, never `Date`/ISO timestamps — SPEC.md §4, enforced by `store.todayLocalDate()` (`src/lib/store.ts:70-76`).
 
 ## Connected to
