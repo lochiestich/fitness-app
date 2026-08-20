@@ -4,6 +4,8 @@ Personal training tracker. Lifting, cardio and polo. Installed on a phone, store
 
 Read `SPEC.md` before writing code. It holds the data model, the derived calculations and the build order.
 
+Before editing existing code, check `map/CLAUDE.md` — a change-impact map of the codebase (what each module is, what breaks if you touch it).
+
 ## Stack
 
 - Vite + React + TypeScript
