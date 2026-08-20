@@ -133,7 +133,7 @@ Bottom tab bar, four tabs. Thumb reach matters, this gets used between sets with
 Segmented control at the top: Lift / Cardio. Polo is not a separate tab — it's an activity choice inside Cardio (see below), so logging it still produces a `type: 'polo'` session under the hood, just reached through the Cardio form.
 
 **Lift** is the one that has to be fast. Target is under 30 seconds for a full session entry.
-- Search, or browse by broad muscle group (Chest/Shoulders/Back/Arms/Legs/Core), each backed by the fixed 15 muscle IDs
+- Search, or browse by broad muscle group (Chest/Shoulders/Back/Biceps/Triceps/Forearms/Legs/Core), each backed by the fixed 15 muscle IDs
 - Weight and reps prefill from the last time that exercise was used
 - Add set, duplicate last set, remove set
 - "Repeat last session" prefills the whole thing
