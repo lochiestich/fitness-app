@@ -5,6 +5,7 @@ import ConsistencyGrid from './progress/ConsistencyGrid'
 import CategoryBreakdown from './progress/CategoryBreakdown'
 import LiftingProgress from './progress/LiftingProgress'
 import CardioProgress from './progress/CardioProgress'
+import PoloProgress from './progress/PoloProgress'
 import BodyweightProgress from './progress/BodyweightProgress'
 import PersonalRecords from './progress/PersonalRecords'
 
@@ -30,6 +31,7 @@ export default function Progress() {
         bodyweightKg={currentBodyweightKg(db)}
       />
       <CardioProgress sessions={db.sessions} referenceDate={today} />
+      <PoloProgress sessions={db.sessions} referenceDate={today} />
       <BodyweightProgress db={db} onChange={() => setDb(loadDB())} />
       <PersonalRecords
         sessions={db.sessions}

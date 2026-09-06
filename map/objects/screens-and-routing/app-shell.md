@@ -21,7 +21,7 @@ The `HashRouter` route table, the bottom tab bar, and the screen components each
 - `Log` screen — `SegmentedControl` toggles `LogType = 'lift' | 'cardio'`; Polo is *not* a third option here, it's an activity choice inside `LogCardio` (see the Polo collision in `../../CONTEXT.md`) — `src/screens/Log.tsx`
 - Backdating — every log form takes an optional `date` from router state (`{ type, date }`); when set and not today, a banner reads "Logging for {date}". `Day.tsx`'s "Add a session for this day" button is the only place that navigates to `/log` with a non-today date — `src/screens/Log.tsx:12-21`, `src/screens/Day.tsx`
 - Screen-to-derived-data wiring: every screen calls `store.loadDB()` then hands the result to one or more `metrics.ts` functions on mount — see `objects/metrics/metrics.md` and `processes/render-derived-view.md`
-- Sub-screens live one level down and are owned by their parent, not independently routed: `screens/log/*` (LogLift, LogCardio, SupersetBuilder, SupersetRounds), `screens/body/*` (MuscleScores, VolumeBars), `screens/today/*` (StreakBar, GoalsWidget, LeastLoaded, RecentSessions), `screens/progress/*` (WeeklyLoadChart, ConsistencyGrid, LiftingProgress, CardioProgress, BodyweightProgress, PersonalRecords)
+- Sub-screens live one level down and are owned by their parent, not independently routed: `screens/log/*` (LogLift, LogCardio, SupersetBuilder, SupersetRounds), `screens/body/*` (MuscleScores, VolumeBars), `screens/today/*` (StreakBar, GoalsWidget, LeastLoaded, RecentSessions), `screens/progress/*` (WeeklyLoadChart, ConsistencyGrid, CategoryBreakdown, LiftingProgress, CardioProgress, PoloProgress, BodyweightProgress, PersonalRecords)
 
 ## Connected to
 

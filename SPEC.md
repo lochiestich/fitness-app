@@ -164,6 +164,7 @@ Below that: horizontal bars, volume by muscle group, 7 day and 28 day toggle.
 - Sets by category: donut chart + legend, lift sets broken down by broad group (Chest/Shoulders/Back/Biceps/Triceps/Forearms/Legs/Core), 7 day and 28 day toggle. Each set is filed under its exercise's single primary (highest-weighted) muscle, so a set counts once, unlike the muscle-volume split used elsewhere. Below it: total workouts, sets, reps and volume for the same window.
 - Lifting: pick an exercise, see e1RM over time plus the best set
 - Cardio: pick an activity, see pace over time and weekly distance (polo isn't included here — no pace/distance concept applies)
+- Polo: games and chukkas played, weekly chukkas over the last 12 weeks, and a per-horse tally of how many games each horse was played in
 - Bodyweight: log a weigh-in, see it over time; the latest entry becomes the current bodyweight used everywhere else
 - Personal records, auto detected
 - Data: export CSV, export JSON backup, import JSON backup
